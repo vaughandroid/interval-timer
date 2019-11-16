@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="chooser_button_margin_x">16dp</dimen>
+    <dimen name="chooser_button_width">48dp</dimen>
+    <dimen name="chooser_button_height">48dp</dimen>
+</resources>

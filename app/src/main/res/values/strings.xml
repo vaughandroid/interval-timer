@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Interval Timer</string>
     <string name="choose_settings">Choose settings</string>
+    <string name="intervals">Intervals</string>
+    <string name="increment">+</string>
+    <string name="decrement">-</string>
 </resources>

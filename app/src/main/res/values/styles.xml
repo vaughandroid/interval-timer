@@ -6,4 +6,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="chooser_button">
+        <item name="android:layout_width">@dimen/chooser_button_width</item>
+        <item name="android:layout_height">@dimen/chooser_button_height</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginEnd">@dimen/chooser_button_margin_x</item>
+        <item name="android:layout_marginStart">@dimen/chooser_button_margin_x</item>
+    </style>
+
 </resources>
