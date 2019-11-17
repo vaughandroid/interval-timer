@@ -28,6 +28,14 @@ class ConfigurationFragment : Fragment() {
         get() = arguments?.getSerializable(KEY_INITIAL_CONFIGURATION) as? Configuration
             ?: throw IllegalStateException("Missing argument: $KEY_INITIAL_CONFIGURATION")
 
+    private lateinit var configurationModel: ConfigurationModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        configurationModel = ConfigurationModel(initialConfiguration)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,10 +46,35 @@ class ConfigurationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        showConfiguration(initialConfiguration)
+        setsNumberChooserView.incrementListener = {
+            configurationModel.incrementSets()
+            refreshValues()
+        }
+        setsNumberChooserView.decrementListener = {
+            configurationModel.decrementSets()
+            refreshValues()
+        }
+        workTimeNumberChooserView.incrementListener = {
+            configurationModel.incrementWorkTime()
+            refreshValues()
+        }
+        workTimeNumberChooserView.decrementListener = {
+            configurationModel.decrementWorkTime()
+            refreshValues()
+        }
+        restTimeNumberChooserView.incrementListener = {
+            configurationModel.incrementRestTime()
+            refreshValues()
+        }
+        restTimeNumberChooserView.decrementListener = {
+            configurationModel.decrementRestTime()
+            refreshValues()
+        }
+        refreshValues()
     }
 
-    private fun showConfiguration(currentConfiguration: Configuration) {
+    private fun refreshValues() {
+        val currentConfiguration = configurationModel.currentConfiguration
         setsNumberChooserView.value = currentConfiguration.sets.toString()
         workTimeNumberChooserView.value = currentConfiguration.workTime.toDisplayString()
         restTimeNumberChooserView.value = currentConfiguration.restTime.toDisplayString()

@@ -10,6 +10,7 @@ class ConfigurationModel(
 ) {
 
     var currentConfiguration: Configuration = initialConfiguration
+        private set
 
     fun decrementSets() {
         val newSets = (currentConfiguration.sets - 1).coerceAtLeast(1)
