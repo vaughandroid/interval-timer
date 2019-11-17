@@ -30,4 +30,14 @@ class ConfigurationModel(initialConfiguration: Configuration) {
         currentConfiguration = currentConfiguration.copy(workTime = newWorkTime)
     }
 
+    fun incrementRestTime() {
+        val newRestTime = (currentConfiguration.restTime + 1.seconds).coerceAtMost(1.hours.toSeconds)
+        currentConfiguration = currentConfiguration.copy(restTime = newRestTime)
+    }
+
+    fun decrementRestTime() {
+        val newRestTime = (currentConfiguration.restTime - 1.seconds).coerceAtLeast(1.seconds)
+        currentConfiguration = currentConfiguration.copy(restTime = newRestTime)
+    }
+
 }

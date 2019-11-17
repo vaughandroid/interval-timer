@@ -5,5 +5,6 @@ import me.vaughandroid.intervaltimer.time.seconds
 
 data class Configuration(
     val sets: Int = 1,
-    val workTime: SecondsDuration = 1.seconds
+    val workTime: SecondsDuration = 1.seconds,
+    val restTime: SecondsDuration = 1.seconds
 )
