@@ -1,6 +1,6 @@
 package me.vaughandroid.intervaltimer.time
 
-inline class SecondsDuration(private val value: Int) {
+inline class SecondsDuration(val value: Int) {
 
     operator fun plus(other: SecondsDuration) =
         (this.value + other.value).seconds

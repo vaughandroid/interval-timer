@@ -29,7 +29,7 @@ class NumberChooserViewTests {
 
     @UiThreadTest
     @Before
-    fun setup() {
+    fun setUp() {
         val activity = activityTestRule.activity
 
         numberChooserView = NumberChooserView(activity)
@@ -47,7 +47,7 @@ class NumberChooserViewTests {
         numberChooserView.title = titleText
 
         // Then
-        onView(withId(R.id.titleTextView))
+        onView(withId(R.id.title))
             .check(matches(withText(titleText)))
     }
 

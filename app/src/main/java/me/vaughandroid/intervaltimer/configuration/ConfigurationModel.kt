@@ -5,10 +5,11 @@ import me.vaughandroid.intervaltimer.time.coerceAtLeast
 import me.vaughandroid.intervaltimer.time.coerceAtMost
 import me.vaughandroid.intervaltimer.time.hours
 
-class ConfigurationModel(initialConfiguration: Configuration) {
+class ConfigurationModel(
+    initialConfiguration: Configuration = Configuration()
+) {
 
     var currentConfiguration: Configuration = initialConfiguration
-        private set
 
     fun decrementSets() {
         val newSets = (currentConfiguration.sets - 1).coerceAtLeast(1)
