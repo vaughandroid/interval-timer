@@ -5,7 +5,7 @@ import me.vaughandroid.intervaltimer.time.seconds
 import java.io.Serializable
 
 data class Configuration(
-    val sets: Int = 1,
-    val workTime: SecondsDuration = 1.seconds,
-    val restTime: SecondsDuration = 1.seconds
+    val sets: Int = 5,
+    val workTime: SecondsDuration = 30.seconds,
+    val restTime: SecondsDuration = 10.seconds
 ) : Serializable
