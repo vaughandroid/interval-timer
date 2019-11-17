@@ -4,13 +4,19 @@ import me.vaughandroid.intervaltimer.time.seconds
 import me.vaughandroid.intervaltimer.time.coerceAtLeast
 import me.vaughandroid.intervaltimer.time.coerceAtMost
 import me.vaughandroid.intervaltimer.time.hours
+import kotlin.properties.Delegates
 
 class ConfigurationModel(
     initialConfiguration: Configuration = Configuration()
 ) {
 
-    var currentConfiguration: Configuration = initialConfiguration
+    var currentConfiguration: Configuration
+            by Delegates.observable(initialConfiguration) { _, _, newValue ->
+                onConfigurationChanged?.invoke(newValue)
+            }
         private set
+
+    var onConfigurationChanged: ((Configuration) -> Unit)? = null
 
     fun decrementSets() {
         val newSets = (currentConfiguration.sets - 1).coerceAtLeast(1)
@@ -23,7 +29,8 @@ class ConfigurationModel(
     }
 
     fun incrementWorkTime() {
-        val newWorkTime = (currentConfiguration.workTime + 1.seconds).coerceAtMost(1.hours.toSeconds)
+        val newWorkTime =
+            (currentConfiguration.workTime + 1.seconds).coerceAtMost(1.hours.toSeconds)
         currentConfiguration = currentConfiguration.copy(workTime = newWorkTime)
     }
 
@@ -33,7 +40,8 @@ class ConfigurationModel(
     }
 
     fun incrementRestTime() {
-        val newRestTime = (currentConfiguration.restTime + 1.seconds).coerceAtMost(1.hours.toSeconds)
+        val newRestTime =
+            (currentConfiguration.restTime + 1.seconds).coerceAtMost(1.hours.toSeconds)
         currentConfiguration = currentConfiguration.copy(restTime = newRestTime)
     }
 

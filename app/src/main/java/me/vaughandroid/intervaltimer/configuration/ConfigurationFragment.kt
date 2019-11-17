@@ -46,35 +46,21 @@ class ConfigurationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setsNumberChooserView.incrementListener = {
-            configurationModel.incrementSets()
-            refreshValues()
+        configurationModel.onConfigurationChanged = { newConfiguration ->
+            updateValues(newConfiguration)
         }
-        setsNumberChooserView.decrementListener = {
-            configurationModel.decrementSets()
-            refreshValues()
-        }
-        workTimeNumberChooserView.incrementListener = {
-            configurationModel.incrementWorkTime()
-            refreshValues()
-        }
-        workTimeNumberChooserView.decrementListener = {
-            configurationModel.decrementWorkTime()
-            refreshValues()
-        }
-        restTimeNumberChooserView.incrementListener = {
-            configurationModel.incrementRestTime()
-            refreshValues()
-        }
-        restTimeNumberChooserView.decrementListener = {
-            configurationModel.decrementRestTime()
-            refreshValues()
-        }
-        refreshValues()
+
+        setsNumberChooserView.incrementListener = { configurationModel.incrementSets() }
+        setsNumberChooserView.decrementListener = { configurationModel.decrementSets() }
+        workTimeNumberChooserView.incrementListener = { configurationModel.incrementWorkTime() }
+        workTimeNumberChooserView.decrementListener = { configurationModel.decrementWorkTime() }
+        restTimeNumberChooserView.incrementListener = { configurationModel.incrementRestTime() }
+        restTimeNumberChooserView.decrementListener = { configurationModel.decrementRestTime() }
+
+        updateValues(configurationModel.currentConfiguration)
     }
 
-    private fun refreshValues() {
-        val currentConfiguration = configurationModel.currentConfiguration
+    private fun updateValues(currentConfiguration: Configuration) {
         setsNumberChooserView.value = currentConfiguration.sets.toString()
         workTimeNumberChooserView.value = currentConfiguration.workTime.toDisplayString()
         restTimeNumberChooserView.value = currentConfiguration.restTime.toDisplayString()
