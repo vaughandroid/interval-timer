@@ -26,7 +26,7 @@ class ConfigurationFragment : Fragment() {
 
     private val initialConfiguration: Configuration
         get() = arguments?.getSerializable(KEY_INITIAL_CONFIGURATION) as? Configuration
-            ?: throw IllegalStateException("Missing argument: $KEY_INITIAL_CONFIGURATION")
+            ?: Configuration()
 
     private lateinit var configurationModel: ConfigurationModel
 
