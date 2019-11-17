@@ -59,23 +59,3 @@ class SetsConfigurationTests {
 
 }
 
-class ConfigurationModel(initialConfiguration: Configuration) {
-
-    var currentConfiguration: Configuration = initialConfiguration
-        private set
-
-    fun decrementSets() {
-        val newSets = (currentConfiguration.sets - 1).coerceAtLeast(1)
-        currentConfiguration = currentConfiguration.copy(sets = newSets)
-    }
-
-    fun incrementSets() {
-        val newSets = (currentConfiguration.sets + 1).coerceAtMost(99)
-        currentConfiguration = currentConfiguration.copy(sets = newSets)
-    }
-
-}
-
-data class Configuration(
-    val sets: Int
-)
