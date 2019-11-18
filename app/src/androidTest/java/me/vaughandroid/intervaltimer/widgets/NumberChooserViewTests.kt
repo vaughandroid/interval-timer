@@ -47,7 +47,7 @@ class NumberChooserViewTests {
         numberChooserView.title = titleText
 
         // Then
-        onView(withId(R.id.title))
+        onView(withId(R.id.titleTextView))
             .check(matches(withText(titleText)))
     }
 
