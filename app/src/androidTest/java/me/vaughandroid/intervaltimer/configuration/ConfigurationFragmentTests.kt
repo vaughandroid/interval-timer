@@ -7,8 +7,11 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
+import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import me.vaughandroid.intervaltimer.BlankActivity
 import me.vaughandroid.intervaltimer.R
+import me.vaughandroid.intervaltimer.Screen
 import me.vaughandroid.intervaltimer.time.seconds
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Rule
@@ -131,6 +134,29 @@ class ConfigurationFragmentTests {
         // Then
         onValueTextView(R.id.restTimeNumberChooserView)
             .check(matches(withText("29")))
+    }
+
+    @Test
+    fun doneButtonNavigatesToTheTimerScreen() {
+        // Given
+        val configuration = Configuration(
+            sets = 13,
+            workTime = 17.seconds,
+            restTime = 19.seconds
+        )
+        val fragment = ConfigurationFragment.withInitialConfiguration(configuration)
+        var receivedNavigationScreen: Screen? = null
+        fragment.navigationHandler = { screen ->
+            receivedNavigationScreen = screen
+        }
+        addFragment(fragment)
+
+        // When
+        onView(withId(R.id.doneButton))
+            .perform(click())
+
+        // Then
+        assertThat(receivedNavigationScreen).isEqualTo(Screen.TIMER)
     }
 
     private fun addFragment(fragment: ConfigurationFragment) {
