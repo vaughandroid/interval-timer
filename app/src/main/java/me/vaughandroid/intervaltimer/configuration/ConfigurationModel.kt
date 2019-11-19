@@ -1,9 +1,9 @@
 package me.vaughandroid.intervaltimer.configuration
 
-import me.vaughandroid.intervaltimer.time.seconds
 import me.vaughandroid.intervaltimer.time.coerceAtLeast
 import me.vaughandroid.intervaltimer.time.coerceAtMost
 import me.vaughandroid.intervaltimer.time.hours
+import me.vaughandroid.intervaltimer.time.seconds
 import kotlin.properties.Delegates
 
 class ConfigurationModel(

@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_configuration.*
+import me.vaughandroid.intervaltimer.NavigationEvent
 import me.vaughandroid.intervaltimer.R
-import me.vaughandroid.intervaltimer.Screen
 import me.vaughandroid.intervaltimer.time.SecondsDuration
 
 class ConfigurationFragment : Fragment() {
@@ -25,7 +25,7 @@ class ConfigurationFragment : Fragment() {
 
     }
 
-    var navigationHandler: ((Screen) -> Unit)? = null
+    var navigationEventHandler: ((NavigationEvent) -> Unit)? = null
 
     private val initialConfiguration: Configuration
         get() = arguments?.getSerializable(KEY_INITIAL_CONFIGURATION) as? Configuration
@@ -60,7 +60,11 @@ class ConfigurationFragment : Fragment() {
         restTimeNumberChooserView.incrementListener = { configurationModel.incrementRestTime() }
         restTimeNumberChooserView.decrementListener = { configurationModel.decrementRestTime() }
 
-        doneButton.setOnClickListener { navigationHandler?.invoke(Screen.TIMER) }
+        doneButton.setOnClickListener {
+            navigationEventHandler?.invoke(
+                NavigationEvent.Timer(configurationModel.currentConfiguration)
+            )
+        }
 
         updateValues(configurationModel.currentConfiguration)
     }

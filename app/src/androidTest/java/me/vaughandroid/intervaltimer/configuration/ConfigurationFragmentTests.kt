@@ -7,11 +7,10 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
-import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import me.vaughandroid.intervaltimer.BlankActivity
+import me.vaughandroid.intervaltimer.NavigationEvent
 import me.vaughandroid.intervaltimer.R
-import me.vaughandroid.intervaltimer.Screen
 import me.vaughandroid.intervaltimer.time.seconds
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Rule
@@ -145,9 +144,9 @@ class ConfigurationFragmentTests {
             restTime = 19.seconds
         )
         val fragment = ConfigurationFragment.withInitialConfiguration(configuration)
-        var receivedNavigationScreen: Screen? = null
-        fragment.navigationHandler = { screen ->
-            receivedNavigationScreen = screen
+        var receivedNavigationEvent: NavigationEvent? = null
+        fragment.navigationEventHandler = { navigationEvent ->
+            receivedNavigationEvent = navigationEvent
         }
         addFragment(fragment)
 
@@ -156,7 +155,7 @@ class ConfigurationFragmentTests {
             .perform(click())
 
         // Then
-        assertThat(receivedNavigationScreen).isEqualTo(Screen.TIMER)
+        assertThat(receivedNavigationEvent).isEqualTo(NavigationEvent.Timer(configuration))
     }
 
     private fun addFragment(fragment: ConfigurationFragment) {
