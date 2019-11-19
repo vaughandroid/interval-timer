@@ -49,7 +49,7 @@ class WorkTimeConfigurationTests {
     @Test
     fun `work time can't be more than 1 hour`() {
         // Given
-        val oneHourAsSeconds = 1.hours.toSeconds
+        val oneHourAsSeconds = 1.hours
         val model = ConfigurationModel(Configuration(workTime = oneHourAsSeconds))
 
         // When

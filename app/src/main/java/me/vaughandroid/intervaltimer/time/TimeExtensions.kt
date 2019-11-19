@@ -1,13 +1,7 @@
 package me.vaughandroid.intervaltimer.time
 
-val Int.seconds: SecondsDuration
-    get() = SecondsDuration(this)
+val Int.seconds: Duration
+    get() = Duration(this * 1000)
 
-fun SecondsDuration.coerceAtLeast(minimumValue: SecondsDuration) =
-    if (this < minimumValue) minimumValue else this
-
-fun SecondsDuration.coerceAtMost(maximumValue: SecondsDuration) =
-    if (this > maximumValue) maximumValue else this
-
-val Int.hours: HoursDuration
-    get() = HoursDuration(this)
+val Int.hours: Duration
+    get() = Duration(this * 60 * 60 * 1000)

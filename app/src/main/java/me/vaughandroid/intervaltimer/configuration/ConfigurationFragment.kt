@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_configuration.*
 import me.vaughandroid.intervaltimer.NavigationEvent
 import me.vaughandroid.intervaltimer.R
-import me.vaughandroid.intervaltimer.time.SecondsDuration
+import me.vaughandroid.intervaltimer.time.Duration
 
 class ConfigurationFragment : Fragment() {
 
@@ -77,4 +77,4 @@ class ConfigurationFragment : Fragment() {
 
 }
 
-private fun SecondsDuration.toDisplayString() = value.toString()
+private fun Duration.toDisplayString() = (millis / 1000).toString()
