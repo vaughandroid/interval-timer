@@ -77,4 +77,9 @@ class ConfigurationFragment : Fragment() {
 
 }
 
-private fun Duration.toDisplayString() = (millis / 1000).toString()
+private fun Duration.toDisplayString(): String {
+    val hours = if (hoursPart != 0) "$hoursPart:" else ""
+    val minutes = if (hoursPart != 0) "${"%02d".format(minutesPart)}:" else "$minutesPart:"
+    val seconds = "%02d".format(secondsPart)
+    return "$hours$minutes$seconds"
+}

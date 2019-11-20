@@ -11,6 +11,7 @@ import com.google.common.truth.Truth.assertThat
 import me.vaughandroid.intervaltimer.BlankActivity
 import me.vaughandroid.intervaltimer.NavigationEvent
 import me.vaughandroid.intervaltimer.R
+import me.vaughandroid.intervaltimer.time.minutes
 import me.vaughandroid.intervaltimer.time.seconds
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Rule
@@ -29,8 +30,8 @@ class ConfigurationFragmentTests {
         // Given
         val configuration = Configuration(
             sets = 13,
-            workTime = 18.seconds,
-            restTime = 27.seconds
+            workTime = 1.minutes + 18.seconds,
+            restTime = 32.minutes + 27.seconds
         )
 
         // When
@@ -40,9 +41,9 @@ class ConfigurationFragmentTests {
         onValueTextView(R.id.setsNumberChooserView)
             .check(matches(withText("13")))
         onValueTextView(R.id.workTimeNumberChooserView)
-            .check(matches(withText("18")))
+            .check(matches(withText("1:18")))
         onValueTextView(R.id.restTimeNumberChooserView)
-            .check(matches(withText("27")))
+            .check(matches(withText("32:27")))
     }
 
     @Test
@@ -87,7 +88,7 @@ class ConfigurationFragmentTests {
 
         // Then
         onValueTextView(R.id.workTimeNumberChooserView)
-            .check(matches(withText("21")))
+            .check(matches(withText("0:21")))
     }
 
     @Test
@@ -102,7 +103,7 @@ class ConfigurationFragmentTests {
 
         // Then
         onValueTextView(R.id.workTimeNumberChooserView)
-            .check(matches(withText("19")))
+            .check(matches(withText("0:19")))
     }
 
     @Test
@@ -117,7 +118,7 @@ class ConfigurationFragmentTests {
 
         // Then
         onValueTextView(R.id.restTimeNumberChooserView)
-            .check(matches(withText("31")))
+            .check(matches(withText("0:31")))
     }
 
     @Test
@@ -132,7 +133,7 @@ class ConfigurationFragmentTests {
 
         // Then
         onValueTextView(R.id.restTimeNumberChooserView)
-            .check(matches(withText("29")))
+            .check(matches(withText("0:29")))
     }
 
     @Test

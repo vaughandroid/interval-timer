@@ -13,6 +13,15 @@ data class Duration(
     operator fun compareTo(other: Duration) =
         this.millis - other.millis
 
+    val hoursPart : Int
+        get() = millis / (1000 * 60 * 60)
+
+    val minutesPart : Int
+        get() = (millis / (1000 * 60)) % 60
+
+    val secondsPart : Int
+        get() = (millis / 1000) % 60
+
     fun coerceAtLeast(minimumValue: Duration) =
         if (this < minimumValue) minimumValue else this
 
