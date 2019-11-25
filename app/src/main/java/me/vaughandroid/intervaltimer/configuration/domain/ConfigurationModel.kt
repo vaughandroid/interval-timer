@@ -12,7 +12,6 @@ class ConfigurationModel(
             by Delegates.observable(initialConfiguration) { _, _, newValue ->
                 onConfigurationChanged?.invoke(newValue)
             }
-        private set
 
     var onConfigurationChanged: ((Configuration) -> Unit)? = null
 

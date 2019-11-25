@@ -12,9 +12,13 @@ import me.vaughandroid.intervaltimer.BlankActivity
 import me.vaughandroid.intervaltimer.NavigationEvent
 import me.vaughandroid.intervaltimer.R
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
+import me.vaughandroid.intervaltimer.configuration.domain.ConfigurationModel
+import me.vaughandroid.intervaltimer.di.ViewModelFactory
 import me.vaughandroid.intervaltimer.time.minutes
 import me.vaughandroid.intervaltimer.time.seconds
 import org.hamcrest.CoreMatchers.allOf
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,6 +30,21 @@ class ConfigurationFragmentTests {
     @get:Rule
     val activityTestRule = ActivityTestRule<BlankActivity>(BlankActivity::class.java)
 
+    @Before
+    fun setUp() {
+        ViewModelFactory.configurationModel = ConfigurationModel()
+    }
+
+    @After
+    fun tearDown() {
+        ViewModelFactory.configurationModel = ConfigurationModel()
+    }
+
+    private fun createFragmentWithInitialConfiguration(configuration: Configuration): ConfigurationFragment {
+        ViewModelFactory.configurationModel = ConfigurationModel(configuration)
+        return ConfigurationFragment()
+    }
+
     @Test
     fun itShowsTheInitialConfiguration() {
         // Given
@@ -36,7 +55,7 @@ class ConfigurationFragmentTests {
         )
 
         // When
-        addFragment(ConfigurationFragment.withInitialConfiguration(configuration))
+        addFragment(createFragmentWithInitialConfiguration(configuration))
 
         // Then
         onValueTextView(R.id.setsNumberChooserView)
@@ -52,7 +71,7 @@ class ConfigurationFragmentTests {
         // Given
         val configuration =
             Configuration(sets = 10)
-        addFragment(ConfigurationFragment.withInitialConfiguration(configuration))
+        addFragment(createFragmentWithInitialConfiguration(configuration))
 
         // When
         onIncrementView(R.id.setsNumberChooserView)
@@ -68,7 +87,7 @@ class ConfigurationFragmentTests {
         // Given
         val configuration =
             Configuration(sets = 10)
-        addFragment(ConfigurationFragment.withInitialConfiguration(configuration))
+        addFragment(createFragmentWithInitialConfiguration(configuration))
 
         // When
         onDecrementView(R.id.setsNumberChooserView)
@@ -84,7 +103,7 @@ class ConfigurationFragmentTests {
         // Given
         val configuration =
             Configuration(workTime = 20.seconds)
-        addFragment(ConfigurationFragment.withInitialConfiguration(configuration))
+        addFragment(createFragmentWithInitialConfiguration(configuration))
 
         // When
         onIncrementView(R.id.workTimeNumberChooserView)
@@ -100,7 +119,7 @@ class ConfigurationFragmentTests {
         // Given
         val configuration =
             Configuration(workTime = 20.seconds)
-        addFragment(ConfigurationFragment.withInitialConfiguration(configuration))
+        addFragment(createFragmentWithInitialConfiguration(configuration))
 
         // When
         onDecrementView(R.id.workTimeNumberChooserView)
@@ -116,7 +135,7 @@ class ConfigurationFragmentTests {
         // Given
         val configuration =
             Configuration(restTime = 30.seconds)
-        addFragment(ConfigurationFragment.withInitialConfiguration(configuration))
+        addFragment(createFragmentWithInitialConfiguration(configuration))
 
         // When
         onIncrementView(R.id.restTimeNumberChooserView)
@@ -132,7 +151,7 @@ class ConfigurationFragmentTests {
         // Given
         val configuration =
             Configuration(restTime = 30.seconds)
-        addFragment(ConfigurationFragment.withInitialConfiguration(configuration))
+        addFragment(createFragmentWithInitialConfiguration(configuration))
 
         // When
         onDecrementView(R.id.restTimeNumberChooserView)
@@ -151,7 +170,7 @@ class ConfigurationFragmentTests {
             workTime = 17.seconds,
             restTime = 19.seconds
         )
-        val fragment = ConfigurationFragment.withInitialConfiguration(configuration)
+        val fragment = createFragmentWithInitialConfiguration(configuration)
         var receivedNavigationEvent: NavigationEvent? = null
         fragment.navigationEventHandler = { navigationEvent ->
             receivedNavigationEvent = navigationEvent
@@ -163,7 +182,7 @@ class ConfigurationFragmentTests {
             .perform(click())
 
         // Then
-        assertThat(receivedNavigationEvent).isEqualTo(NavigationEvent.Timer(configuration))
+        assertThat(receivedNavigationEvent).isEqualTo(NavigationEvent.TIMER)
     }
 
     private fun addFragment(fragment: ConfigurationFragment) {
