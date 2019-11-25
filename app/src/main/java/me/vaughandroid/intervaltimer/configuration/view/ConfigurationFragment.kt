@@ -1,4 +1,4 @@
-package me.vaughandroid.intervaltimer.configuration
+package me.vaughandroid.intervaltimer.configuration.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_configuration.*
 import me.vaughandroid.intervaltimer.NavigationEvent
 import me.vaughandroid.intervaltimer.R
+import me.vaughandroid.intervaltimer.configuration.domain.Configuration
+import me.vaughandroid.intervaltimer.configuration.domain.ConfigurationModel
 import me.vaughandroid.intervaltimer.time.Duration
 import me.vaughandroid.intervaltimer.time.DurationFormatter
 
@@ -33,12 +35,16 @@ class ConfigurationFragment : Fragment() {
             ?: Configuration()
 
     private lateinit var configurationModel: ConfigurationModel
-    private val configurationPresenter = ConfigurationPresenter()
+    private val configurationPresenter =
+        ConfigurationPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        configurationModel = ConfigurationModel(initialConfiguration)
+        configurationModel =
+            ConfigurationModel(
+                initialConfiguration
+            )
         configurationModel.onConfigurationChanged = { configuration ->
             configurationPresenter.onConfigurationChanged(configuration)
         }

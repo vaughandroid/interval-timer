@@ -1,4 +1,4 @@
-package me.vaughandroid.intervaltimer.configuration
+package me.vaughandroid.intervaltimer.configuration.view
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -11,6 +11,7 @@ import com.google.common.truth.Truth.assertThat
 import me.vaughandroid.intervaltimer.BlankActivity
 import me.vaughandroid.intervaltimer.NavigationEvent
 import me.vaughandroid.intervaltimer.R
+import me.vaughandroid.intervaltimer.configuration.domain.Configuration
 import me.vaughandroid.intervaltimer.time.minutes
 import me.vaughandroid.intervaltimer.time.seconds
 import org.hamcrest.CoreMatchers.allOf
@@ -49,7 +50,8 @@ class ConfigurationFragmentTests {
     @Test
     fun usersCanIncrementTheSets() {
         // Given
-        val configuration = Configuration(sets = 10)
+        val configuration =
+            Configuration(sets = 10)
         addFragment(ConfigurationFragment.withInitialConfiguration(configuration))
 
         // When
@@ -64,7 +66,8 @@ class ConfigurationFragmentTests {
     @Test
     fun usersCanDecrementTheSets() {
         // Given
-        val configuration = Configuration(sets = 10)
+        val configuration =
+            Configuration(sets = 10)
         addFragment(ConfigurationFragment.withInitialConfiguration(configuration))
 
         // When
@@ -79,7 +82,8 @@ class ConfigurationFragmentTests {
     @Test
     fun usersCanIncrementTheWorkTime() {
         // Given
-        val configuration = Configuration(workTime = 20.seconds)
+        val configuration =
+            Configuration(workTime = 20.seconds)
         addFragment(ConfigurationFragment.withInitialConfiguration(configuration))
 
         // When
@@ -94,7 +98,8 @@ class ConfigurationFragmentTests {
     @Test
     fun usersCanDecrementTheWorkTime() {
         // Given
-        val configuration = Configuration(workTime = 20.seconds)
+        val configuration =
+            Configuration(workTime = 20.seconds)
         addFragment(ConfigurationFragment.withInitialConfiguration(configuration))
 
         // When
@@ -109,7 +114,8 @@ class ConfigurationFragmentTests {
     @Test
     fun usersCanIncrementTheRestTime() {
         // Given
-        val configuration = Configuration(restTime = 30.seconds)
+        val configuration =
+            Configuration(restTime = 30.seconds)
         addFragment(ConfigurationFragment.withInitialConfiguration(configuration))
 
         // When
@@ -124,7 +130,8 @@ class ConfigurationFragmentTests {
     @Test
     fun usersCanDecrementTheRestTime() {
         // Given
-        val configuration = Configuration(restTime = 30.seconds)
+        val configuration =
+            Configuration(restTime = 30.seconds)
         addFragment(ConfigurationFragment.withInitialConfiguration(configuration))
 
         // When

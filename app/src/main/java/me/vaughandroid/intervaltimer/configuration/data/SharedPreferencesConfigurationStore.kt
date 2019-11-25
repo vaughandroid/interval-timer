@@ -1,7 +1,8 @@
-package me.vaughandroid.intervaltimer.configuration
+package me.vaughandroid.intervaltimer.configuration.data
 
 import android.content.Context
 import androidx.core.content.edit
+import me.vaughandroid.intervaltimer.configuration.domain.Configuration
 import me.vaughandroid.intervaltimer.time.Duration
 
 class SharedPreferencesConfigurationStore(
@@ -17,14 +18,18 @@ class SharedPreferencesConfigurationStore(
 
     }
 
-    private val sharedPreferences = context.getSharedPreferences(SHARED_PREFS_NAME,
+    private val sharedPreferences = context.getSharedPreferences(
+        SHARED_PREFS_NAME,
         Context.MODE_PRIVATE
     )
 
     override fun getConfiguration(): Configuration {
         return if (sharedPreferences.contains(KEY_SETS)) {
             Configuration(
-                sets = sharedPreferences.getInt(KEY_SETS, 1),
+                sets = sharedPreferences.getInt(
+                    KEY_SETS,
+                    1
+                ),
                 workTime = Duration(
                     sharedPreferences.getInt(
                         KEY_WORK_TIME,

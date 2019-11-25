@@ -1,9 +1,10 @@
-package me.vaughandroid.intervaltimer.configuration
+package me.vaughandroid.intervaltimer.configuration.data
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.common.truth.Truth.assertThat
+import me.vaughandroid.intervaltimer.configuration.domain.Configuration
 import me.vaughandroid.intervaltimer.time.minutes
 import org.junit.After
 import org.junit.Before
@@ -29,7 +30,10 @@ class SharedPreferencesConfigurationStoreTests {
     @Test
     fun when_nothing_has_been_saved_it_returns_a_default_configuration() {
         // Given
-        val store = SharedPreferencesConfigurationStore(context)
+        val store =
+            SharedPreferencesConfigurationStore(
+                context
+            )
         
         // When
         val configuration = store.getConfiguration()
@@ -41,7 +45,10 @@ class SharedPreferencesConfigurationStoreTests {
     @Test
     fun a_stored_value_can_be_retrieved() {
         // Given
-        val store = SharedPreferencesConfigurationStore(context)
+        val store =
+            SharedPreferencesConfigurationStore(
+                context
+            )
         val storedConfiguration = Configuration(
             sets = 11,
             workTime = 1.minutes,
@@ -59,14 +66,20 @@ class SharedPreferencesConfigurationStoreTests {
     @Test
     fun a_stored_value_can_be_retrieved_by_a_different_store_instance() {
         // Given
-        val storeA = SharedPreferencesConfigurationStore(context)
+        val storeA =
+            SharedPreferencesConfigurationStore(
+                context
+            )
         val storedConfiguration = Configuration(
             sets = 11,
             workTime = 1.minutes,
             restTime = 2.minutes
         )
         storeA.putConfiguration(storedConfiguration)
-        val storeB = SharedPreferencesConfigurationStore(context)
+        val storeB =
+            SharedPreferencesConfigurationStore(
+                context
+            )
 
         // When
         val retrievedConfiguration = storeB.getConfiguration()

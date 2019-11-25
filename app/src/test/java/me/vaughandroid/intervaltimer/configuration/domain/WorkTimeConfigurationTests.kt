@@ -1,6 +1,8 @@
-package me.vaughandroid.intervaltimer.configuration
+package me.vaughandroid.intervaltimer.configuration.domain
 
 import com.google.common.truth.Truth
+import me.vaughandroid.intervaltimer.configuration.domain.Configuration
+import me.vaughandroid.intervaltimer.configuration.domain.ConfigurationModel
 import me.vaughandroid.intervaltimer.time.hours
 import me.vaughandroid.intervaltimer.time.seconds
 import org.junit.Test
@@ -10,7 +12,9 @@ class WorkTimeConfigurationTests {
     @Test
     fun `work time can be incremented`() {
         // Given
-        val model = ConfigurationModel(Configuration(workTime = 12.seconds))
+        val model = ConfigurationModel(
+            Configuration(workTime = 12.seconds)
+        )
 
         // When
         model.incrementWorkTime()
@@ -23,7 +27,9 @@ class WorkTimeConfigurationTests {
     @Test
     fun `work time can be decremented`() {
         // Given
-        val model = ConfigurationModel(Configuration(workTime = 30.seconds))
+        val model = ConfigurationModel(
+            Configuration(workTime = 30.seconds)
+        )
 
         // When
         model.decrementWorkTime()
@@ -36,7 +42,9 @@ class WorkTimeConfigurationTests {
     @Test
     fun `work time can't be less than 1 second`() {
         // Given
-        val model = ConfigurationModel(Configuration(workTime = 1.seconds))
+        val model = ConfigurationModel(
+            Configuration(workTime = 1.seconds)
+        )
 
         // When
         model.decrementWorkTime()
@@ -50,7 +58,9 @@ class WorkTimeConfigurationTests {
     fun `work time can't be more than 1 hour`() {
         // Given
         val oneHourAsSeconds = 1.hours
-        val model = ConfigurationModel(Configuration(workTime = oneHourAsSeconds))
+        val model = ConfigurationModel(
+            Configuration(workTime = oneHourAsSeconds)
+        )
 
         // When
         model.incrementWorkTime()

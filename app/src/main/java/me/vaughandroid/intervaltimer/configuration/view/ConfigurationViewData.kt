@@ -1,4 +1,4 @@
-package me.vaughandroid.intervaltimer.configuration
+package me.vaughandroid.intervaltimer.configuration.view
 
 data class ConfigurationViewData(
     val setsText: String,
