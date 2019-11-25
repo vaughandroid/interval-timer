@@ -10,8 +10,6 @@ import me.vaughandroid.intervaltimer.NavigationEvent
 import me.vaughandroid.intervaltimer.R
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
 import me.vaughandroid.intervaltimer.configuration.domain.ConfigurationModel
-import me.vaughandroid.intervaltimer.time.Duration
-import me.vaughandroid.intervaltimer.time.DurationFormatter
 
 class ConfigurationFragment : Fragment() {
 
@@ -35,19 +33,11 @@ class ConfigurationFragment : Fragment() {
             ?: Configuration()
 
     private lateinit var configurationModel: ConfigurationModel
-    private val configurationPresenter =
-        ConfigurationPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        configurationModel =
-            ConfigurationModel(
-                initialConfiguration
-            )
-        configurationModel.onConfigurationChanged = { configuration ->
-            configurationPresenter.onConfigurationChanged(configuration)
-        }
+        configurationModel = ConfigurationModel(initialConfiguration)
     }
 
     override fun onCreateView(
@@ -60,8 +50,8 @@ class ConfigurationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        configurationPresenter.viewDataListener = { configurationViewData ->
-            updateValues(configurationViewData)
+        configurationModel.onConfigurationChanged = { configuration ->
+            updateValues(configuration)
         }
 
         setsNumberChooserView.incrementListener = { configurationModel.incrementSets() }
@@ -77,7 +67,11 @@ class ConfigurationFragment : Fragment() {
             )
         }
 
-        configurationPresenter.onConfigurationChanged(configurationModel.currentConfiguration)
+        updateValues(configurationModel.currentConfiguration)
+    }
+
+    private fun updateValues(configurationViewData: Configuration) {
+        updateValues(ConfigurationPresenter.transform(configurationViewData))
     }
 
     private fun updateValues(configurationViewData: ConfigurationViewData) {
@@ -87,5 +81,3 @@ class ConfigurationFragment : Fragment() {
     }
 
 }
-
-private fun Duration.toDisplayString(): String = DurationFormatter.toDisplayString(this)

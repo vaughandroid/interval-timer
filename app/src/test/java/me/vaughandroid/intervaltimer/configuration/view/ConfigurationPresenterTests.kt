@@ -16,34 +16,20 @@ class ConfigurationPresenterTests {
             workTime = 2.minutes + 30.seconds,
             restTime = 10.minutes
         )
-        val configurationPresenter =
-            ConfigurationPresenter()
-        val spyViewDataListener =
-            SpyViewDataListener()
-        configurationPresenter.viewDataListener = spyViewDataListener
-
-        // When
-        configurationPresenter.onConfigurationChanged(configuration)
-
-        // Then
         val expectedViewData =
             ConfigurationViewData(
                 setsText = "12",
                 workTimeText = "2:30",
                 restTimeText = "10:00"
             )
-        assertThat(spyViewDataListener.receivedViewData).isEqualTo(expectedViewData)
+
+        // When
+        val receivedViewData = ConfigurationPresenter.transform(configuration)
+
+        // Then
+        assertThat(receivedViewData).isEqualTo(expectedViewData)
     }
 
 }
 
-class SpyViewDataListener : (ConfigurationViewData) -> Unit {
-
-    var receivedViewData: ConfigurationViewData? = null
-
-    override fun invoke(configurationViewData: ConfigurationViewData) {
-        receivedViewData = configurationViewData
-    }
-
-}
 

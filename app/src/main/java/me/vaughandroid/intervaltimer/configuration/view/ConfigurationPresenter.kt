@@ -3,12 +3,10 @@ package me.vaughandroid.intervaltimer.configuration.view
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
 import me.vaughandroid.intervaltimer.time.DurationFormatter
 
-class ConfigurationPresenter {
+object ConfigurationPresenter {
 
-    var viewDataListener: ((ConfigurationViewData) -> Unit)? = null
-
-    fun onConfigurationChanged(configuration: Configuration) {
-        val viewData = ConfigurationViewData(
+    fun transform(configuration: Configuration): ConfigurationViewData =
+        ConfigurationViewData(
             setsText = configuration.sets.toString(),
             workTimeText = DurationFormatter.toDisplayString(
                 configuration.workTime
@@ -17,7 +15,5 @@ class ConfigurationPresenter {
                 configuration.restTime
             )
         )
-        viewDataListener?.invoke(viewData)
-    }
 
 }
