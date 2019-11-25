@@ -33,11 +33,15 @@ class ConfigurationFragment : Fragment() {
             ?: Configuration()
 
     private lateinit var configurationModel: ConfigurationModel
+    private val configurationPresenter = ConfigurationPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         configurationModel = ConfigurationModel(initialConfiguration)
+        configurationModel.onConfigurationChanged = { configuration ->
+            configurationPresenter.onConfigurationChanged(configuration)
+        }
     }
 
     override fun onCreateView(
@@ -50,8 +54,8 @@ class ConfigurationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        configurationModel.onConfigurationChanged = { newConfiguration ->
-            updateValues(newConfiguration)
+        configurationPresenter.viewDataListener = { configurationViewData ->
+            updateValues(configurationViewData)
         }
 
         setsNumberChooserView.incrementListener = { configurationModel.incrementSets() }
@@ -67,13 +71,13 @@ class ConfigurationFragment : Fragment() {
             )
         }
 
-        updateValues(configurationModel.currentConfiguration)
+        configurationPresenter.onConfigurationChanged(configurationModel.currentConfiguration)
     }
 
-    private fun updateValues(currentConfiguration: Configuration) {
-        setsNumberChooserView.value = currentConfiguration.sets.toString()
-        workTimeNumberChooserView.value = currentConfiguration.workTime.toDisplayString()
-        restTimeNumberChooserView.value = currentConfiguration.restTime.toDisplayString()
+    private fun updateValues(configurationViewData: ConfigurationViewData) {
+        setsNumberChooserView.value = configurationViewData.setsText
+        workTimeNumberChooserView.value = configurationViewData.workTimeText
+        restTimeNumberChooserView.value = configurationViewData.restTimeText
     }
 
 }
