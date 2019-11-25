@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.fragment_configuration.*
 import me.vaughandroid.intervaltimer.NavigationEvent
 import me.vaughandroid.intervaltimer.R
 import me.vaughandroid.intervaltimer.time.Duration
+import me.vaughandroid.intervaltimer.time.DurationFormatter
 
 class ConfigurationFragment : Fragment() {
 
@@ -77,9 +78,4 @@ class ConfigurationFragment : Fragment() {
 
 }
 
-private fun Duration.toDisplayString(): String {
-    val hours = if (hoursPart != 0) "$hoursPart:" else ""
-    val minutes = if (hoursPart != 0) "${"%02d".format(minutesPart)}:" else "$minutesPart:"
-    val seconds = "%02d".format(secondsPart)
-    return "$hours$minutes$seconds"
-}
+private fun Duration.toDisplayString(): String = DurationFormatter.toDisplayString(this)
