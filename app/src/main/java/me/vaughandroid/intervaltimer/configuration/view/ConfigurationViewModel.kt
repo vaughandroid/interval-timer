@@ -3,7 +3,9 @@ package me.vaughandroid.intervaltimer.configuration.view
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import me.vaughandroid.intervaltimer.configuration.domain.Configuration
 import me.vaughandroid.intervaltimer.configuration.domain.ConfigurationModel
+import me.vaughandroid.intervaltimer.time.DurationFormatter
 
 class ConfigurationViewModel(
     private val configurationModel: ConfigurationModel
@@ -11,15 +13,15 @@ class ConfigurationViewModel(
 
     private val mutableViewDataLiveData = MutableLiveData<ConfigurationViewData>()
 
-    val viewDataLiveData : LiveData<ConfigurationViewData> = mutableViewDataLiveData
+    val viewDataLiveData: LiveData<ConfigurationViewData> = mutableViewDataLiveData
 
     init {
         configurationModel.onConfigurationChanged = { configuration ->
-            val viewData = ConfigurationPresenter.transform(configuration)
+            val viewData = configuration.toViewData()
             mutableViewDataLiveData.postValue(viewData)
         }
 
-        val initialViewData = ConfigurationPresenter.transform(configurationModel.currentConfiguration)
+        val initialViewData = configurationModel.currentConfiguration.toViewData()
         mutableViewDataLiveData.postValue(initialViewData)
     }
 
@@ -48,3 +50,10 @@ class ConfigurationViewModel(
     }
 
 }
+
+private fun Configuration.toViewData(): ConfigurationViewData =
+    ConfigurationViewData(
+        setsText = sets.toString(),
+        workTimeText = DurationFormatter.toDisplayString(workTime),
+        restTimeText = DurationFormatter.toDisplayString(restTime)
+    )

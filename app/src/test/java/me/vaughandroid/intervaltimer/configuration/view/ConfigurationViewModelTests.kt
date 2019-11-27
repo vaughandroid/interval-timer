@@ -5,6 +5,7 @@ import androidx.lifecycle.Observer
 import com.google.common.truth.Truth.assertThat
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
 import me.vaughandroid.intervaltimer.configuration.domain.ConfigurationModel
+import me.vaughandroid.intervaltimer.time.minutes
 import me.vaughandroid.intervaltimer.time.seconds
 import org.junit.Rule
 import org.junit.Test
@@ -17,16 +18,7 @@ class ConfigurationViewModelTests {
     @Test
     fun `view data is emitted when registering for updates`() {
         // Given
-        val configuration = Configuration(
-            sets = 12,
-            workTime = 20.seconds,
-            restTime = 10.seconds
-        )
-        val expectedViewData = ConfigurationViewData(
-            setsText = "12",
-            workTimeText = "0:20",
-            restTimeText = "0:10"
-        )
+        val configuration = Configuration(sets = 7)
         val model = ConfigurationModel(configuration)
         val viewModel = ConfigurationViewModel(model)
         val spyViewDataObserver = SpyViewDataObserver()
@@ -35,22 +27,13 @@ class ConfigurationViewModelTests {
         viewModel.viewDataLiveData.observeForever(spyViewDataObserver)
 
         // Then
-        assertThat(spyViewDataObserver.receivedViewData).isEqualTo(expectedViewData)
+        assertThat(spyViewDataObserver.receivedViewData).hasSize(1)
     }
 
     @Test
     fun `view data is emitted when the current configuration changes`() {
         // Given
-        val updatedConfiguration = Configuration(
-            sets = 17,
-            workTime = 19.seconds,
-            restTime = 23.seconds
-        )
-        val expectedViewData = ConfigurationViewData(
-            setsText = "17",
-            workTimeText = "0:19",
-            restTimeText = "0:23"
-        )
+        val updatedConfiguration = Configuration(sets = 11)
         val model = ConfigurationModel()
         val viewModel = ConfigurationViewModel(model)
         val spyViewDataObserver = SpyViewDataObserver()
@@ -60,17 +43,40 @@ class ConfigurationViewModelTests {
         model.currentConfiguration = updatedConfiguration
 
         // Then
-        assertThat(spyViewDataObserver.receivedViewData).isEqualTo(expectedViewData)
+        assertThat(spyViewDataObserver.receivedViewData).hasSize(2)
+    }
+
+    @Test
+    fun `configuration values are transformed into view data correctly`() {
+        val configuration = Configuration(
+            sets = 12,
+            workTime = 2.minutes + 30.seconds,
+            restTime = 10.minutes
+        )
+        val expectedViewData = ConfigurationViewData(
+                setsText = "12",
+                workTimeText = "2:30",
+                restTimeText = "10:00"
+            )
+        val model = ConfigurationModel(configuration)
+        val viewModel = ConfigurationViewModel(model)
+        val spyViewDataObserver = SpyViewDataObserver()
+
+        // When
+        viewModel.viewDataLiveData.observeForever(spyViewDataObserver)
+
+        // Then
+        assertThat(spyViewDataObserver.receivedViewData[0]).isEqualTo(expectedViewData)
     }
 
 }
 
 class SpyViewDataObserver : Observer<ConfigurationViewData> {
 
-    var receivedViewData: ConfigurationViewData? = null
+    val receivedViewData = mutableListOf<ConfigurationViewData>()
 
     override fun onChanged(viewData: ConfigurationViewData) {
-        receivedViewData = viewData
+        receivedViewData += viewData
     }
 
 }
