@@ -69,6 +69,102 @@ class ConfigurationViewModelTests {
         assertThat(spyViewDataObserver.receivedViewData[0]).isEqualTo(expectedViewData)
     }
 
+    @Test
+    fun `sets can be incremented`() {
+        // Given
+        val configuration = Configuration(sets = 10)
+        val model = ConfigurationModel(configuration)
+        val viewModel = ConfigurationViewModel(model)
+        val spyViewDataObserver = SpyViewDataObserver()
+        viewModel.viewDataLiveData.observeForever(spyViewDataObserver)
+
+        // When
+        viewModel.incrementSets()
+
+        // Then
+        assertThat(spyViewDataObserver.receivedViewData.last().setsText).isEqualTo("11")
+    }
+
+    @Test
+    fun `sets can be decremented`() {
+        // Given
+        val configuration = Configuration(sets = 10)
+        val model = ConfigurationModel(configuration)
+        val viewModel = ConfigurationViewModel(model)
+        val spyViewDataObserver = SpyViewDataObserver()
+        viewModel.viewDataLiveData.observeForever(spyViewDataObserver)
+
+        // When
+        viewModel.decrementSets()
+
+        // Then
+        assertThat(spyViewDataObserver.receivedViewData.last().setsText).isEqualTo("9")
+    }
+
+    @Test
+    fun `work time can be incremented`() {
+        // Given
+        val configuration = Configuration(workTime = 20.seconds)
+        val model = ConfigurationModel(configuration)
+        val viewModel = ConfigurationViewModel(model)
+        val spyViewDataObserver = SpyViewDataObserver()
+        viewModel.viewDataLiveData.observeForever(spyViewDataObserver)
+
+        // When
+        viewModel.incrementWorkTime()
+
+        // Then
+        assertThat(spyViewDataObserver.receivedViewData.last().workTimeText).isEqualTo("0:21")
+    }
+
+    @Test
+    fun `work time can be decremented`() {
+        // Given
+        val configuration = Configuration(workTime = 20.seconds)
+        val model = ConfigurationModel(configuration)
+        val viewModel = ConfigurationViewModel(model)
+        val spyViewDataObserver = SpyViewDataObserver()
+        viewModel.viewDataLiveData.observeForever(spyViewDataObserver)
+
+        // When
+        viewModel.decrementWorkTime()
+
+        // Then
+        assertThat(spyViewDataObserver.receivedViewData.last().workTimeText).isEqualTo("0:19")
+    }
+
+    @Test
+    fun `rest time can be incremented`() {
+        // Given
+        val configuration = Configuration(restTime = 30.seconds)
+        val model = ConfigurationModel(configuration)
+        val viewModel = ConfigurationViewModel(model)
+        val spyViewDataObserver = SpyViewDataObserver()
+        viewModel.viewDataLiveData.observeForever(spyViewDataObserver)
+
+        // When
+        viewModel.incrementRestTime()
+
+        // Then
+        assertThat(spyViewDataObserver.receivedViewData.last().restTimeText).isEqualTo("0:31")
+    }
+
+    @Test
+    fun `rest time can be decremented`() {
+        // Given
+        val configuration = Configuration(restTime = 30.seconds)
+        val model = ConfigurationModel(configuration)
+        val viewModel = ConfigurationViewModel(model)
+        val spyViewDataObserver = SpyViewDataObserver()
+        viewModel.viewDataLiveData.observeForever(spyViewDataObserver)
+
+        // When
+        viewModel.decrementRestTime()
+
+        // Then
+        assertThat(spyViewDataObserver.receivedViewData.last().restTimeText).isEqualTo("0:29")
+    }
+
 }
 
 class SpyViewDataObserver : Observer<ConfigurationViewData> {
