@@ -40,7 +40,7 @@ class ConfigurationViewModelTests {
         viewModel.viewDataLiveData.observeForever(spyViewDataObserver)
 
         // When
-        model.currentConfiguration = updatedConfiguration
+        model.updateConfiguration(updatedConfiguration)
 
         // Then
         assertThat(spyViewDataObserver.receivedViewData).hasSize(2)

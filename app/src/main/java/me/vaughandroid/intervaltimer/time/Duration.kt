@@ -13,19 +13,22 @@ data class Duration(
     operator fun compareTo(other: Duration) =
         this.millis - other.millis
 
-    val hoursPart : Int
+    val hoursPart: Int
         get() = millis / (1000 * 60 * 60)
 
-    val minutesPart : Int
+    val minutesPart: Int
         get() = (millis / (1000 * 60)) % 60
 
-    val secondsPart : Int
+    val secondsPart: Int
         get() = (millis / 1000) % 60
 
-    fun coerceAtLeast(minimumValue: Duration) =
-        if (this < minimumValue) minimumValue else this
-
-    fun coerceAtMost(maximumValue: Duration) =
-        if (this > maximumValue) maximumValue else this
+    fun coerceIn(minimumValue: Duration, maximumValue: Duration) =
+        when {
+            minimumValue > maximumValue ->
+                throw IllegalArgumentException("Min cannot be greater than max")
+            this < minimumValue -> minimumValue
+            this > maximumValue -> maximumValue
+            else -> this
+        }
 
 }

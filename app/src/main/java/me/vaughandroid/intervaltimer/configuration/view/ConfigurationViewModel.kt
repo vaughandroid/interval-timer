@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
 import me.vaughandroid.intervaltimer.configuration.domain.ConfigurationModel
 import me.vaughandroid.intervaltimer.time.DurationFormatter
+import me.vaughandroid.intervaltimer.time.seconds
 
 class ConfigurationViewModel(
     private val configurationModel: ConfigurationModel
@@ -15,38 +16,50 @@ class ConfigurationViewModel(
 
     val viewDataLiveData: LiveData<ConfigurationViewData> = mutableViewDataLiveData
 
+    private val currentConfiguration = configurationModel.currentConfiguration
+
     init {
-        configurationModel.onConfigurationChanged = { configuration ->
+        configurationModel.configurationChangedListener = { configuration ->
             val viewData = configuration.toViewData()
             mutableViewDataLiveData.postValue(viewData)
         }
 
-        val initialViewData = configurationModel.currentConfiguration.toViewData()
+        val initialViewData = currentConfiguration.toViewData()
         mutableViewDataLiveData.postValue(initialViewData)
     }
 
     fun incrementSets() {
-        configurationModel.incrementSets()
+        val newConfiguration = currentConfiguration.copy(sets = currentConfiguration.sets + 1)
+        configurationModel.updateConfiguration(newConfiguration)
     }
 
     fun decrementSets() {
-        configurationModel.decrementSets()
+        val newConfiguration = currentConfiguration.copy(sets = currentConfiguration.sets - 1)
+        configurationModel.updateConfiguration(newConfiguration)
     }
 
     fun incrementWorkTime() {
-        configurationModel.incrementWorkTime()
+        val newConfiguration =
+            currentConfiguration.copy(workTime = currentConfiguration.workTime + 1.seconds)
+        configurationModel.updateConfiguration(newConfiguration)
     }
 
     fun decrementWorkTime() {
-        configurationModel.decrementWorkTime()
+        val newConfiguration =
+            currentConfiguration.copy(workTime = currentConfiguration.workTime - 1.seconds)
+        configurationModel.updateConfiguration(newConfiguration)
     }
 
     fun incrementRestTime() {
-        configurationModel.incrementRestTime()
+        val newConfiguration =
+            currentConfiguration.copy(restTime = currentConfiguration.restTime + 1.seconds)
+        configurationModel.updateConfiguration(newConfiguration)
     }
 
     fun decrementRestTime() {
-        configurationModel.decrementRestTime()
+        val newConfiguration =
+            currentConfiguration.copy(restTime = currentConfiguration.restTime - 1.seconds)
+        configurationModel.updateConfiguration(newConfiguration)
     }
 
 }

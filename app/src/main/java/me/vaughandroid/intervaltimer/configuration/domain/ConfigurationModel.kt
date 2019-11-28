@@ -2,49 +2,27 @@ package me.vaughandroid.intervaltimer.configuration.domain
 
 import me.vaughandroid.intervaltimer.time.hours
 import me.vaughandroid.intervaltimer.time.seconds
-import kotlin.properties.Delegates
 
 class ConfigurationModel(
     initialConfiguration: Configuration = Configuration()
 ) {
 
-    var currentConfiguration: Configuration
-            by Delegates.observable(initialConfiguration) { _, _, newValue ->
-                onConfigurationChanged?.invoke(newValue)
-            }
+    var currentConfiguration: Configuration = initialConfiguration
+        private set
 
-    var onConfigurationChanged: ((Configuration) -> Unit)? = null
+    var configurationChangedListener: ((Configuration) -> Unit)? = null
 
-    fun decrementSets() {
-        val newSets = (currentConfiguration.sets - 1).coerceAtLeast(1)
-        currentConfiguration = currentConfiguration.copy(sets = newSets)
+    fun updateConfiguration(newConfiguration: Configuration) {
+        val constrainedConfiguration = applyConstraints(newConfiguration)
+        currentConfiguration = constrainedConfiguration
+        configurationChangedListener?.invoke(constrainedConfiguration)
     }
 
-    fun incrementSets() {
-        val newSets = (currentConfiguration.sets + 1).coerceAtMost(99)
-        currentConfiguration = currentConfiguration.copy(sets = newSets)
-    }
-
-    fun incrementWorkTime() {
-        val newWorkTime =
-            (currentConfiguration.workTime + 1.seconds).coerceAtMost(1.hours)
-        currentConfiguration = currentConfiguration.copy(workTime = newWorkTime)
-    }
-
-    fun decrementWorkTime() {
-        val newWorkTime = (currentConfiguration.workTime - 1.seconds).coerceAtLeast(1.seconds)
-        currentConfiguration = currentConfiguration.copy(workTime = newWorkTime)
-    }
-
-    fun incrementRestTime() {
-        val newRestTime =
-            (currentConfiguration.restTime + 1.seconds).coerceAtMost(1.hours)
-        currentConfiguration = currentConfiguration.copy(restTime = newRestTime)
-    }
-
-    fun decrementRestTime() {
-        val newRestTime = (currentConfiguration.restTime - 1.seconds).coerceAtLeast(1.seconds)
-        currentConfiguration = currentConfiguration.copy(restTime = newRestTime)
-    }
+    private fun applyConstraints(configuration: Configuration) =
+        Configuration(
+            sets = configuration.sets.coerceIn(1, 99),
+            workTime = configuration.workTime.coerceIn(1.seconds, 1.hours),
+            restTime = configuration.restTime.coerceIn(1.seconds, 1.hours)
+        )
 
 }

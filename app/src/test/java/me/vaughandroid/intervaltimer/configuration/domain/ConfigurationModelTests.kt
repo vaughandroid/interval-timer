@@ -10,12 +10,11 @@ class ConfigurationModelTests {
     @Test
     fun `sets can't be less than 1`() {
         // Given
-        val model = ConfigurationModel(
-            Configuration(sets = 1)
-        )
+        val model = ConfigurationModel()
+        val configuration = Configuration(sets = 0)
 
         // When
-        model.decrementSets()
+        model.updateConfiguration(configuration)
 
         // Then
         val currentConfiguration : Configuration = model.currentConfiguration
@@ -25,12 +24,11 @@ class ConfigurationModelTests {
     @Test
     fun `sets can't be greater than 99`() {
         // Given
-        val model = ConfigurationModel(
-            Configuration(sets = 99)
-        )
+        val model = ConfigurationModel()
+        val configuration = Configuration(sets = 100)
 
         // When
-        model.incrementSets()
+        model.updateConfiguration(configuration)
 
         // Then
         val currentConfiguration : Configuration = model.currentConfiguration
@@ -40,12 +38,11 @@ class ConfigurationModelTests {
     @Test
     fun `work time can't be less than 1 second`() {
         // Given
-        val model = ConfigurationModel(
-            Configuration(workTime = 1.seconds)
-        )
+        val model = ConfigurationModel()
+        val configuration = Configuration(workTime = 0.seconds)
 
         // When
-        model.decrementWorkTime()
+        model.updateConfiguration(configuration)
 
         // Then
         val currentConfiguration : Configuration = model.currentConfiguration
@@ -55,28 +52,25 @@ class ConfigurationModelTests {
     @Test
     fun `work time can't be more than 1 hour`() {
         // Given
-        val oneHourAsSeconds = 1.hours
-        val model = ConfigurationModel(
-            Configuration(workTime = oneHourAsSeconds)
-        )
+        val model = ConfigurationModel()
+        val configuration = Configuration(workTime = 1.hours + 1.seconds)
 
         // When
-        model.incrementWorkTime()
+        model.updateConfiguration(configuration)
 
         // Then
         val currentConfiguration : Configuration = model.currentConfiguration
-        assertThat(currentConfiguration.workTime).isEqualTo(oneHourAsSeconds)
+        assertThat(currentConfiguration.workTime).isEqualTo(1.hours)
     }
 
     @Test
     fun `rest time can't be less than 1 second`() {
         // Given
-        val model = ConfigurationModel(
-            Configuration(restTime = 1.seconds)
-        )
+        val model = ConfigurationModel()
+        val configuration = Configuration(restTime = 0.seconds)
 
         // When
-        model.decrementRestTime()
+        model.updateConfiguration(configuration)
 
         // Then
         val currentConfiguration : Configuration = model.currentConfiguration
@@ -86,16 +80,14 @@ class ConfigurationModelTests {
     @Test
     fun `rest time can't be more than 1 hour`() {
         // Given
-        val oneHourAsSeconds = 1.hours
-        val model = ConfigurationModel(
-            Configuration(restTime = oneHourAsSeconds)
-        )
+        val model = ConfigurationModel()
+        val configuration = Configuration(restTime = 1.hours + 1.seconds)
 
         // When
-        model.incrementRestTime()
+        model.updateConfiguration(configuration)
 
         // Then
         val currentConfiguration : Configuration = model.currentConfiguration
-        assertThat(currentConfiguration.restTime).isEqualTo(oneHourAsSeconds)
+        assertThat(currentConfiguration.restTime).isEqualTo(1.hours)
     }
 }
