@@ -11,6 +11,7 @@ import com.google.common.truth.Truth.assertThat
 import me.vaughandroid.intervaltimer.BlankActivity
 import me.vaughandroid.intervaltimer.NavigationEvent
 import me.vaughandroid.intervaltimer.R
+import me.vaughandroid.intervaltimer.configuration.data.ConfigurationStore
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
 import me.vaughandroid.intervaltimer.configuration.domain.ConfigurationModel
 import me.vaughandroid.intervaltimer.di.ViewModelFactory
@@ -32,16 +33,19 @@ class ConfigurationFragmentTests {
 
     @Before
     fun setUp() {
-        ViewModelFactory.configurationModel = ConfigurationModel()
+        ViewModelFactory.configurationModel = ConfigurationModel(StubConfigurationStore())
     }
 
     @After
     fun tearDown() {
-        ViewModelFactory.configurationModel = ConfigurationModel()
+        ViewModelFactory.configurationModel = ConfigurationModel(StubConfigurationStore())
     }
 
-    private fun createFragmentWithInitialConfiguration(configuration: Configuration): ConfigurationFragment {
-        ViewModelFactory.configurationModel = ConfigurationModel(configuration)
+    private fun createFragmentWithInitialConfiguration(
+        configuration: Configuration
+    ): ConfigurationFragment {
+        val configurationStore = StubConfigurationStore(configuration)
+        ViewModelFactory.configurationModel = ConfigurationModel(configurationStore)
         return ConfigurationFragment()
     }
 
@@ -217,4 +221,12 @@ class ConfigurationFragmentTests {
             )
         )
 
+}
+
+private class StubConfigurationStore(
+    private val storedConfiguration: Configuration = Configuration()
+) : ConfigurationStore {
+    override fun getConfiguration(): Configuration = storedConfiguration
+
+    override fun putConfiguration(configuration: Configuration) {}
 }

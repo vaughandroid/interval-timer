@@ -1,11 +1,13 @@
 package me.vaughandroid.intervaltimer.configuration.domain
 
+import me.vaughandroid.intervaltimer.configuration.data.ConfigurationStore
 import me.vaughandroid.intervaltimer.time.hours
 import me.vaughandroid.intervaltimer.time.seconds
 
-class ConfigurationModel(
+class ConfigurationModel constructor(
     initialConfiguration: Configuration = Configuration()
 ) {
+    constructor(configurationStore: ConfigurationStore) : this(configurationStore.getConfiguration())
 
     var currentConfiguration: Configuration = initialConfiguration
         private set

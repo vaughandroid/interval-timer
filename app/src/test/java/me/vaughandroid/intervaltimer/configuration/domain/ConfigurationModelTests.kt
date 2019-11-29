@@ -1,11 +1,31 @@
 package me.vaughandroid.intervaltimer.configuration.domain
 
 import com.google.common.truth.Truth.assertThat
+import me.vaughandroid.intervaltimer.configuration.data.TestConfigurationStore
 import me.vaughandroid.intervaltimer.time.hours
 import me.vaughandroid.intervaltimer.time.seconds
 import org.junit.Test
 
 class ConfigurationModelTests {
+
+    @Test
+    fun `initial configuration is read from the store`() {
+        // Given
+        val storedConfiguration = Configuration(
+            sets = 12,
+            workTime = 37.seconds,
+            restTime = 43.seconds
+        )
+        val stubStore = TestConfigurationStore(
+            storedConfiguration
+        )
+
+        // When
+        val model = ConfigurationModel(stubStore)
+
+        // Then
+        assertThat(model.currentConfiguration).isEqualTo(storedConfiguration)
+    }
 
     @Test
     fun `sets can't be less than 1`() {
@@ -91,3 +111,4 @@ class ConfigurationModelTests {
         assertThat(currentConfiguration.restTime).isEqualTo(1.hours)
     }
 }
+
