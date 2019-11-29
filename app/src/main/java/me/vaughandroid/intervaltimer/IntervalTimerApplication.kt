@@ -1,22 +1,24 @@
 package me.vaughandroid.intervaltimer
 
 import android.app.Application
-import me.vaughandroid.intervaltimer.configuration.data.SharedPreferencesConfigurationStore
-import me.vaughandroid.intervaltimer.configuration.domain.ConfigurationModel
+import androidx.annotation.VisibleForTesting
+import me.vaughandroid.intervaltimer.di.AppContainer
 import me.vaughandroid.intervaltimer.di.ViewModelFactory
 
 @Suppress("unused")
 class IntervalTimerApplication : Application() {
 
-    override fun onCreate() {
-        super.onCreate()
-
-        initViewModelFactory()
+    @VisibleForTesting
+    fun clearAppContainer() {
+        viewModelFactory = ViewModelFactory(AppContainer(this))
     }
 
-    private fun initViewModelFactory() {
-        val configurationStore = SharedPreferencesConfigurationStore(this)
-        ViewModelFactory.configurationModel = ConfigurationModel(configurationStore)
+    @VisibleForTesting
+    fun setAppContainer(appContainer: AppContainer) {
+        viewModelFactory = ViewModelFactory(appContainer)
     }
+
+    var viewModelFactory: ViewModelFactory = ViewModelFactory(AppContainer(this))
+        private set
 
 }

@@ -5,15 +5,15 @@ import androidx.lifecycle.ViewModelProvider
 import me.vaughandroid.intervaltimer.configuration.domain.ConfigurationModel
 import me.vaughandroid.intervaltimer.configuration.view.ConfigurationViewModel
 
-object ViewModelFactory : ViewModelProvider.Factory {
-
-    lateinit var configurationModel: ConfigurationModel
+class ViewModelFactory(
+    private val appContainer: AppContainer
+) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(ConfigurationViewModel::class.java) -> {
-                ConfigurationViewModel(configurationModel) as T
+                ConfigurationViewModel(appContainer.createConfigurationModel()) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel type: ${modelClass.simpleName}")
         }

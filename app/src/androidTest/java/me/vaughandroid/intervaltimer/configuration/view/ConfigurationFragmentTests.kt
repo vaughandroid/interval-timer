@@ -6,15 +6,16 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import com.google.common.truth.Truth.assertThat
 import me.vaughandroid.intervaltimer.BlankActivity
+import me.vaughandroid.intervaltimer.IntervalTimerApplication
 import me.vaughandroid.intervaltimer.NavigationEvent
 import me.vaughandroid.intervaltimer.R
 import me.vaughandroid.intervaltimer.configuration.data.ConfigurationStore
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
-import me.vaughandroid.intervaltimer.configuration.domain.ConfigurationModel
-import me.vaughandroid.intervaltimer.di.ViewModelFactory
+import me.vaughandroid.intervaltimer.di.AppContainer
 import me.vaughandroid.intervaltimer.time.minutes
 import me.vaughandroid.intervaltimer.time.seconds
 import org.hamcrest.CoreMatchers.allOf
@@ -31,21 +32,25 @@ class ConfigurationFragmentTests {
     @get:Rule
     val activityTestRule = ActivityTestRule<BlankActivity>(BlankActivity::class.java)
 
+    private val intervalTimerApplication =
+        InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as IntervalTimerApplication
+
     @Before
     fun setUp() {
-        ViewModelFactory.configurationModel = ConfigurationModel(StubConfigurationStore())
+        intervalTimerApplication.clearAppContainer()
     }
 
     @After
     fun tearDown() {
-        ViewModelFactory.configurationModel = ConfigurationModel(StubConfigurationStore())
+        intervalTimerApplication.clearAppContainer()
     }
 
     private fun createFragmentWithInitialConfiguration(
         configuration: Configuration
     ): ConfigurationFragment {
-        val configurationStore = StubConfigurationStore(configuration)
-        ViewModelFactory.configurationModel = ConfigurationModel(configurationStore)
+        val stubConfigurationStore = StubConfigurationStore(configuration)
+        val appContainer = AppContainer(stubConfigurationStore)
+        intervalTimerApplication.setAppContainer(appContainer)
         return ConfigurationFragment()
     }
 

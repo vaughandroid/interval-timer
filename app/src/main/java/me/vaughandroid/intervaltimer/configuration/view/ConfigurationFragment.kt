@@ -8,9 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_configuration.*
+import me.vaughandroid.intervaltimer.IntervalTimerApplication
 import me.vaughandroid.intervaltimer.NavigationEvent
 import me.vaughandroid.intervaltimer.R
-import me.vaughandroid.intervaltimer.di.ViewModelFactory
 
 class ConfigurationFragment : Fragment() {
 
@@ -23,7 +23,7 @@ class ConfigurationFragment : Fragment() {
 
         configurationViewModel = ViewModelProviders.of(
             this,
-            ViewModelFactory
+            (requireContext().applicationContext as IntervalTimerApplication).viewModelFactory
         )[ConfigurationViewModel::class.java]
     }
 
