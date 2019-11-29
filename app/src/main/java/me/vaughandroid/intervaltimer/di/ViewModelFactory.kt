@@ -4,11 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import me.vaughandroid.intervaltimer.configuration.domain.ConfigurationModel
 import me.vaughandroid.intervaltimer.configuration.view.ConfigurationViewModel
-import java.lang.IllegalArgumentException
 
 object ViewModelFactory : ViewModelProvider.Factory {
 
-    var configurationModel = ConfigurationModel()
+    lateinit var configurationModel: ConfigurationModel
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

@@ -4,12 +4,11 @@ import me.vaughandroid.intervaltimer.configuration.data.ConfigurationStore
 import me.vaughandroid.intervaltimer.time.hours
 import me.vaughandroid.intervaltimer.time.seconds
 
-class ConfigurationModel constructor(
-    initialConfiguration: Configuration = Configuration()
+class ConfigurationModel(
+    private val configurationStore: ConfigurationStore
 ) {
-    constructor(configurationStore: ConfigurationStore) : this(configurationStore.getConfiguration())
 
-    var currentConfiguration: Configuration = initialConfiguration
+    var currentConfiguration: Configuration = configurationStore.getConfiguration()
         private set
 
     var configurationChangedListener: ((Configuration) -> Unit)? = null
@@ -17,6 +16,7 @@ class ConfigurationModel constructor(
     fun updateConfiguration(newConfiguration: Configuration) {
         val constrainedConfiguration = applyConstraints(newConfiguration)
         currentConfiguration = constrainedConfiguration
+        configurationStore.putConfiguration(constrainedConfiguration)
         configurationChangedListener?.invoke(constrainedConfiguration)
     }
 

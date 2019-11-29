@@ -16,7 +16,8 @@ class ConfigurationViewModel(
 
     val viewDataLiveData: LiveData<ConfigurationViewData> = mutableViewDataLiveData
 
-    private val currentConfiguration = configurationModel.currentConfiguration
+    private val currentConfiguration: Configuration
+            get() = configurationModel.currentConfiguration
 
     init {
         configurationModel.configurationChangedListener = { configuration ->

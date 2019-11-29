@@ -3,6 +3,7 @@ package me.vaughandroid.intervaltimer.configuration.view
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.google.common.truth.Truth.assertThat
+import me.vaughandroid.intervaltimer.configuration.data.FakeConfigurationStore
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
 import me.vaughandroid.intervaltimer.configuration.domain.ConfigurationModel
 import me.vaughandroid.intervaltimer.time.minutes
@@ -19,8 +20,7 @@ class ConfigurationViewModelTests {
     fun `view data is emitted when registering for updates`() {
         // Given
         val configuration = Configuration(sets = 7)
-        val model = ConfigurationModel(configuration)
-        val viewModel = ConfigurationViewModel(model)
+        val viewModel = createViewModel(configuration)
         val spyViewDataObserver = SpyViewDataObserver()
 
         // When
@@ -31,13 +31,17 @@ class ConfigurationViewModelTests {
     }
 
     @Test
-    fun `view data is emitted when the current configuration changes`() {
+    fun `view data is emitted when the model emits configuration changes`() {
         // Given
-        val updatedConfiguration = Configuration(sets = 11)
-        val model = ConfigurationModel()
+        val initialConfiguration = Configuration(sets = 9)
+        val configurationStore = FakeConfigurationStore(initialConfiguration)
+        val model = ConfigurationModel(configurationStore)
         val viewModel = ConfigurationViewModel(model)
+
         val spyViewDataObserver = SpyViewDataObserver()
         viewModel.viewDataLiveData.observeForever(spyViewDataObserver)
+
+        val updatedConfiguration = Configuration(sets = 11)
 
         // When
         model.updateConfiguration(updatedConfiguration)
@@ -58,8 +62,7 @@ class ConfigurationViewModelTests {
                 workTimeText = "2:30",
                 restTimeText = "10:00"
             )
-        val model = ConfigurationModel(configuration)
-        val viewModel = ConfigurationViewModel(model)
+        val viewModel = createViewModel(configuration)
         val spyViewDataObserver = SpyViewDataObserver()
 
         // When
@@ -73,8 +76,7 @@ class ConfigurationViewModelTests {
     fun `sets can be incremented`() {
         // Given
         val configuration = Configuration(sets = 10)
-        val model = ConfigurationModel(configuration)
-        val viewModel = ConfigurationViewModel(model)
+        val viewModel = createViewModel(configuration)
         val spyViewDataObserver = SpyViewDataObserver()
         viewModel.viewDataLiveData.observeForever(spyViewDataObserver)
 
@@ -89,8 +91,7 @@ class ConfigurationViewModelTests {
     fun `sets can be decremented`() {
         // Given
         val configuration = Configuration(sets = 10)
-        val model = ConfigurationModel(configuration)
-        val viewModel = ConfigurationViewModel(model)
+        val viewModel = createViewModel(configuration)
         val spyViewDataObserver = SpyViewDataObserver()
         viewModel.viewDataLiveData.observeForever(spyViewDataObserver)
 
@@ -105,8 +106,7 @@ class ConfigurationViewModelTests {
     fun `work time can be incremented`() {
         // Given
         val configuration = Configuration(workTime = 20.seconds)
-        val model = ConfigurationModel(configuration)
-        val viewModel = ConfigurationViewModel(model)
+        val viewModel = createViewModel(configuration)
         val spyViewDataObserver = SpyViewDataObserver()
         viewModel.viewDataLiveData.observeForever(spyViewDataObserver)
 
@@ -121,8 +121,7 @@ class ConfigurationViewModelTests {
     fun `work time can be decremented`() {
         // Given
         val configuration = Configuration(workTime = 20.seconds)
-        val model = ConfigurationModel(configuration)
-        val viewModel = ConfigurationViewModel(model)
+        val viewModel = createViewModel(configuration)
         val spyViewDataObserver = SpyViewDataObserver()
         viewModel.viewDataLiveData.observeForever(spyViewDataObserver)
 
@@ -137,8 +136,7 @@ class ConfigurationViewModelTests {
     fun `rest time can be incremented`() {
         // Given
         val configuration = Configuration(restTime = 30.seconds)
-        val model = ConfigurationModel(configuration)
-        val viewModel = ConfigurationViewModel(model)
+        val viewModel = createViewModel(configuration)
         val spyViewDataObserver = SpyViewDataObserver()
         viewModel.viewDataLiveData.observeForever(spyViewDataObserver)
 
@@ -153,8 +151,7 @@ class ConfigurationViewModelTests {
     fun `rest time can be decremented`() {
         // Given
         val configuration = Configuration(restTime = 30.seconds)
-        val model = ConfigurationModel(configuration)
-        val viewModel = ConfigurationViewModel(model)
+        val viewModel = createViewModel(configuration)
         val spyViewDataObserver = SpyViewDataObserver()
         viewModel.viewDataLiveData.observeForever(spyViewDataObserver)
 
@@ -163,6 +160,14 @@ class ConfigurationViewModelTests {
 
         // Then
         assertThat(spyViewDataObserver.receivedViewData.last().restTimeText).isEqualTo("0:29")
+    }
+
+    private fun createViewModel(
+        initialConfiguration: Configuration = Configuration()
+    ): ConfigurationViewModel {
+        val configurationStore = FakeConfigurationStore(initialConfiguration)
+        val model = ConfigurationModel(configurationStore)
+        return ConfigurationViewModel(model)
     }
 
 }
