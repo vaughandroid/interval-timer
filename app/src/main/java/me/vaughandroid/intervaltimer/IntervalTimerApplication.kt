@@ -5,7 +5,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
-import me.vaughandroid.intervaltimer.di.AppContainer
+import me.vaughandroid.intervaltimer.di.AppDependencies
 import me.vaughandroid.intervaltimer.di.ViewModelFactory
 
 @Suppress("unused")
@@ -13,15 +13,15 @@ class IntervalTimerApplication : Application() {
 
     @VisibleForTesting
     fun clearAppContainer() {
-        viewModelFactory = ViewModelFactory(AppContainer(this))
+        viewModelFactory = ViewModelFactory(AppDependencies(this))
     }
 
     @VisibleForTesting
-    fun setAppContainer(appContainer: AppContainer) {
-        viewModelFactory = ViewModelFactory(appContainer)
+    fun setAppContainer(appDependencies: AppDependencies) {
+        viewModelFactory = ViewModelFactory(appDependencies)
     }
 
-    var viewModelFactory: ViewModelFactory = ViewModelFactory(AppContainer(this))
+    var viewModelFactory: ViewModelFactory = ViewModelFactory(AppDependencies(this))
         private set
 
     companion object {

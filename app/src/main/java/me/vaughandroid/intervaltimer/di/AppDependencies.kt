@@ -5,7 +5,7 @@ import me.vaughandroid.intervaltimer.configuration.data.ConfigurationStore
 import me.vaughandroid.intervaltimer.configuration.data.SharedPreferencesConfigurationStore
 import me.vaughandroid.intervaltimer.configuration.domain.ConfigurationModel
 
-class AppContainer(
+class AppDependencies(
     private val configurationStore: ConfigurationStore
 ) {
 

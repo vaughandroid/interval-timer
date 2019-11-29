@@ -15,7 +15,7 @@ import me.vaughandroid.intervaltimer.NavigationEvent
 import me.vaughandroid.intervaltimer.R
 import me.vaughandroid.intervaltimer.configuration.data.ConfigurationStore
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
-import me.vaughandroid.intervaltimer.di.AppContainer
+import me.vaughandroid.intervaltimer.di.AppDependencies
 import me.vaughandroid.intervaltimer.time.minutes
 import me.vaughandroid.intervaltimer.time.seconds
 import org.hamcrest.CoreMatchers.allOf
@@ -49,7 +49,7 @@ class ConfigurationFragmentTests {
         configuration: Configuration
     ): ConfigurationFragment {
         val stubConfigurationStore = StubConfigurationStore(configuration)
-        val appContainer = AppContainer(stubConfigurationStore)
+        val appContainer = AppDependencies(stubConfigurationStore)
         intervalTimerApplication.setAppContainer(appContainer)
         return ConfigurationFragment()
     }
