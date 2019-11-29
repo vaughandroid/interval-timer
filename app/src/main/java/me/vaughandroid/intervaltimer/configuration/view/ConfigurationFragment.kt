@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_configuration.*
 import me.vaughandroid.intervaltimer.IntervalTimerApplication
 import me.vaughandroid.intervaltimer.NavigationEvent
@@ -21,10 +20,10 @@ class ConfigurationFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        configurationViewModel = ViewModelProviders.of(
+        configurationViewModel = IntervalTimerApplication.getViewModel(
             this,
-            (requireContext().applicationContext as IntervalTimerApplication).viewModelFactory
-        )[ConfigurationViewModel::class.java]
+            ConfigurationViewModel::class.java
+        )
     }
 
     override fun onCreateView(
