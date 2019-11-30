@@ -21,8 +21,14 @@ class IntervalTimerApplication : Application() {
         viewModelFactory = ViewModelFactory(appDependencies)
     }
 
-    var viewModelFactory: ViewModelFactory = ViewModelFactory(AppDependencies(this))
+    lateinit var viewModelFactory: ViewModelFactory
         private set
+
+    override fun onCreate() {
+        super.onCreate()
+
+        viewModelFactory = ViewModelFactory(AppDependencies(this))
+    }
 
     companion object {
 
