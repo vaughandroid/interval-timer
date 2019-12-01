@@ -1,5 +1,6 @@
 package me.vaughandroid.intervaltimer
 
-enum class NavigationEvent {
+enum class Screen {
+    CONFIGURATION,
     TIMER
 }

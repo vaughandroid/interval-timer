@@ -11,7 +11,7 @@ import androidx.test.rule.ActivityTestRule
 import com.google.common.truth.Truth.assertThat
 import me.vaughandroid.intervaltimer.BlankActivity
 import me.vaughandroid.intervaltimer.IntervalTimerApplication
-import me.vaughandroid.intervaltimer.NavigationEvent
+import me.vaughandroid.intervaltimer.Screen
 import me.vaughandroid.intervaltimer.R
 import me.vaughandroid.intervaltimer.configuration.data.ConfigurationStore
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
@@ -180,9 +180,9 @@ class ConfigurationFragmentTests {
             restTime = 19.seconds
         )
         val fragment = createFragmentWithInitialConfiguration(configuration)
-        var receivedNavigationEvent: NavigationEvent? = null
+        var receivedScreen: Screen? = null
         fragment.navigationEventHandler = { navigationEvent ->
-            receivedNavigationEvent = navigationEvent
+            receivedScreen = navigationEvent
         }
         addFragment(fragment)
 
@@ -191,7 +191,7 @@ class ConfigurationFragmentTests {
             .perform(click())
 
         // Then
-        assertThat(receivedNavigationEvent).isEqualTo(NavigationEvent.TIMER)
+        assertThat(receivedScreen).isEqualTo(Screen.TIMER)
     }
 
     private fun addFragment(fragment: ConfigurationFragment) {

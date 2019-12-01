@@ -4,12 +4,4 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <fragment
-        android:name="me.vaughandroid.intervaltimer.configuration.view.ConfigurationFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/fragment_configuration" />
-
-</FrameLayout>
+    tools:context=".MainActivity" />

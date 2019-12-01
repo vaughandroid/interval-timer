@@ -8,12 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_configuration.*
 import me.vaughandroid.intervaltimer.IntervalTimerApplication
-import me.vaughandroid.intervaltimer.NavigationEvent
+import me.vaughandroid.intervaltimer.Screen
 import me.vaughandroid.intervaltimer.R
 
 class ConfigurationFragment : Fragment() {
 
-    var navigationEventHandler: ((NavigationEvent) -> Unit)? = null
+    var navigationEventHandler: ((Screen) -> Unit)? = null
 
     private lateinit var configurationViewModel: ConfigurationViewModel
 
@@ -48,7 +48,7 @@ class ConfigurationFragment : Fragment() {
         restTimeNumberChooserView.decrementListener = { configurationViewModel.decrementRestTime() }
 
         doneButton.setOnClickListener {
-            navigationEventHandler?.invoke(NavigationEvent.TIMER)
+            navigationEventHandler?.invoke(Screen.TIMER)
         }
     }
 
