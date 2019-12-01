@@ -172,7 +172,7 @@ class ConfigurationViewModelTests {
 
 }
 
-class SpyViewDataObserver : Observer<ConfigurationViewData> {
+private class SpyViewDataObserver : Observer<ConfigurationViewData> {
 
     val receivedViewData = mutableListOf<ConfigurationViewData>()
 
