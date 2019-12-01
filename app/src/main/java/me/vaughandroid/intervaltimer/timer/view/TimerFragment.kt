@@ -1,4 +1,4 @@
-package me.vaughandroid.intervaltimer.timer
+package me.vaughandroid.intervaltimer.timer.view
 
 
 import android.os.Bundle

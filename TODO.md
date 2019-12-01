@@ -10,7 +10,8 @@
   - Run through complete session
   - Count down to start
   - Sounds
-
+  - Reset
+  
 ## Cleanup
 
 - Navigation

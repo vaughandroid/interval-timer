@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import me.vaughandroid.intervaltimer.configuration.view.ConfigurationFragment
-import me.vaughandroid.intervaltimer.timer.TimerFragment
+import me.vaughandroid.intervaltimer.timer.view.TimerFragment
 
 class MainActivity : AppCompatActivity() {
 
