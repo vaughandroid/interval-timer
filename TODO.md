@@ -3,7 +3,6 @@
 ## Features
 
 - Timer screen
-  - Load initial times from config
   - Count down work time
   - Pause & resume count down
   - Count down rest time

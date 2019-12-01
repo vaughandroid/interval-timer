@@ -37,7 +37,7 @@ class ConfigurationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val observer = Observer<ConfigurationViewData> { viewData -> updateValues(viewData) }
+        val observer = Observer<ConfigurationViewData> { viewData -> updateViews(viewData) }
         configurationViewModel.viewDataLiveData.observe(this, observer)
 
         setsNumberChooserView.incrementListener = { configurationViewModel.incrementSets() }
@@ -52,7 +52,7 @@ class ConfigurationFragment : Fragment() {
         }
     }
 
-    private fun updateValues(configurationViewData: ConfigurationViewData) {
+    private fun updateViews(configurationViewData: ConfigurationViewData) {
         setsNumberChooserView.value = configurationViewData.setsText
         workTimeNumberChooserView.value = configurationViewData.workTimeText
         restTimeNumberChooserView.value = configurationViewData.restTimeText
