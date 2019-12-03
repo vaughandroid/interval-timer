@@ -3,7 +3,7 @@ package me.vaughandroid.intervaltimer.time
 import kotlin.concurrent.thread
 
 class SystemTimeProvider(
-    private val tickMillis: Long
+    private val tickMillis: Long = 100
 ) : TimeProvider {
 
     override val currentTimeMillis: Long

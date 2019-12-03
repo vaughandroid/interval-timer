@@ -3,6 +3,7 @@ package me.vaughandroid.intervaltimer.timer.domain
 import com.google.common.truth.Truth.assertThat
 import me.vaughandroid.intervaltimer.configuration.data.FakeConfigurationStore
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
+import me.vaughandroid.intervaltimer.time.SystemTimeProvider
 import me.vaughandroid.intervaltimer.time.seconds
 import org.junit.Test
 
@@ -19,7 +20,7 @@ class TimerModelTests {
         val stubStore = FakeConfigurationStore(storedConfiguration)
 
         // When
-        val model = TimerModel(stubStore)
+        val model = TimerModel(stubStore, SystemTimeProvider())
 
         // Then
         assertThat(model.currentSets).isEqualTo(12)

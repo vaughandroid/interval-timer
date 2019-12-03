@@ -5,6 +5,7 @@ import androidx.lifecycle.Observer
 import com.google.common.truth.Truth.assertThat
 import me.vaughandroid.intervaltimer.configuration.data.FakeConfigurationStore
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
+import me.vaughandroid.intervaltimer.time.SystemTimeProvider
 import me.vaughandroid.intervaltimer.time.minutes
 import me.vaughandroid.intervaltimer.time.seconds
 import me.vaughandroid.intervaltimer.timer.domain.TimerModel
@@ -53,7 +54,7 @@ class TimerViewModelTests {
     }
 
     private fun createViewModel(configuration: Configuration = Configuration()): TimerViewModel {
-        val timerModel = TimerModel(FakeConfigurationStore(configuration))
+        val timerModel = TimerModel(FakeConfigurationStore(configuration), SystemTimeProvider())
         return TimerViewModel(timerModel)
     }
 

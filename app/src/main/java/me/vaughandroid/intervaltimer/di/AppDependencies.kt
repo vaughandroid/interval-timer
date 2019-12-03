@@ -10,7 +10,7 @@ import me.vaughandroid.intervaltimer.timer.domain.TimerModel
 
 class AppDependencies(
     private val configurationStore: ConfigurationStore,
-    private val timeProvider: TimeProvider = SystemTimeProvider(100)
+    private val timeProvider: TimeProvider = SystemTimeProvider()
 ) {
 
     constructor(application: Application) : this(
