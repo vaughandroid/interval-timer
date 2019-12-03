@@ -37,6 +37,8 @@ class TimerFragment : Fragment() {
 
         val observer = Observer<TimerViewData> { viewData -> updateViews(viewData) }
         timerViewModel.viewDataLiveData.observe(this, observer)
+
+        startButton.setOnClickListener { timerViewModel.start() }
     }
 
     private fun updateViews(viewData: TimerViewData) {

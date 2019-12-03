@@ -11,8 +11,8 @@ import androidx.test.rule.ActivityTestRule
 import com.google.common.truth.Truth.assertThat
 import me.vaughandroid.intervaltimer.BlankActivity
 import me.vaughandroid.intervaltimer.IntervalTimerApplication
-import me.vaughandroid.intervaltimer.Screen
 import me.vaughandroid.intervaltimer.R
+import me.vaughandroid.intervaltimer.Screen
 import me.vaughandroid.intervaltimer.configuration.data.ConfigurationStore
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
 import me.vaughandroid.intervaltimer.di.AppDependencies

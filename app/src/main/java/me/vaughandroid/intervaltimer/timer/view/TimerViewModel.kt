@@ -7,7 +7,7 @@ import me.vaughandroid.intervaltimer.time.DurationFormatter
 import me.vaughandroid.intervaltimer.timer.domain.TimerModel
 
 class TimerViewModel(
-    timerModel: TimerModel
+    private val timerModel: TimerModel
 ) : ViewModel() {
 
     private val mutableLiveData =
@@ -16,11 +16,22 @@ class TimerViewModel(
     val viewDataLiveData: LiveData<TimerViewData> = mutableLiveData
 
     init {
-        mutableLiveData.value = TimerViewData(
-            setsText = timerModel.currentSets.toString(),
-            workTimeText = DurationFormatter.toDisplayString(timerModel.currentWorkTime),
-            restTimeText= DurationFormatter.toDisplayString(timerModel.currentRestTime)
+        updateLiveData()
+        timerModel.workTimeChangedListener = { updateLiveData() }
+    }
+
+    private fun updateLiveData() {
+        mutableLiveData.postValue(
+            TimerViewData(
+                setsText = timerModel.currentSets.toString(),
+                workTimeText = DurationFormatter.toDisplayString(timerModel.currentWorkTime),
+                restTimeText = DurationFormatter.toDisplayString(timerModel.currentRestTime)
+            )
         )
+    }
+
+    fun start() {
+        timerModel.start()
     }
 
 }

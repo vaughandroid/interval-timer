@@ -1,8 +1,10 @@
 package me.vaughandroid.intervaltimer.timer.view
 
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
@@ -13,9 +15,10 @@ import me.vaughandroid.intervaltimer.R
 import me.vaughandroid.intervaltimer.configuration.data.ConfigurationStore
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
 import me.vaughandroid.intervaltimer.di.AppDependencies
+import me.vaughandroid.intervaltimer.time.Duration
+import me.vaughandroid.intervaltimer.time.TimeProvider
 import me.vaughandroid.intervaltimer.time.minutes
 import me.vaughandroid.intervaltimer.time.seconds
-import org.hamcrest.CoreMatchers.allOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -32,6 +35,8 @@ class TimerFragmentTests {
     private val intervalTimerApplication =
         InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as IntervalTimerApplication
 
+    private val testTimeProvider = TestTimeProvider()
+
     @Before
     fun setUp() {
         intervalTimerApplication.clearAppContainer()
@@ -46,7 +51,10 @@ class TimerFragmentTests {
         configuration: Configuration
     ): TimerFragment {
         val stubConfigurationStore = StubConfigurationStore(configuration)
-        val appContainer = AppDependencies(stubConfigurationStore)
+        val appContainer = AppDependencies(
+            stubConfigurationStore,
+            testTimeProvider
+        )
         intervalTimerApplication.setAppContainer(appContainer)
         return TimerFragment()
     }
@@ -72,12 +80,50 @@ class TimerFragmentTests {
             .check(matches(withText("32:27")))
     }
 
+    @Test
+    fun timerCountsDownWorkTimeWhenRunning() {
+        // Given
+        val configuration = Configuration(
+            sets = 1,
+            workTime = 1.minutes
+        )
+        addFragment(createFragmentWithInitialConfiguration(configuration))
+        onView(withId(R.id.startButton))
+            .perform(click())
+
+        // When
+        testTimeProvider.advanceTime(10.seconds)
+        // TODO: Remove the need for a sleep here.
+        Thread.sleep(500)
+
+        // Then
+        onView(withId(R.id.workTimeTextView))
+            .check(matches(withText("0:50")))
+    }
+
     private fun addFragment(fragment: TimerFragment) {
         activityTestRule.runOnUiThread {
             activityTestRule.activity.supportFragmentManager.beginTransaction()
                 .add(android.R.id.content, fragment)
                 .commit()
         }
+    }
+
+}
+
+class TestTimeProvider(
+    startTimeMillis: Long = 42L
+) : TimeProvider {
+
+    override var currentTimeMillis: Long = startTimeMillis
+        private set
+
+    init {
+        currentTimeMillis = startTimeMillis
+    }
+
+    fun advanceTime(duration: Duration) {
+        currentTimeMillis += duration.millis
     }
 
 }
