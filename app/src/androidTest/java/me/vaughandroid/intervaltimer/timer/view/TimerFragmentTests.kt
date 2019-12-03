@@ -93,8 +93,6 @@ class TimerFragmentTests {
 
         // When
         testTimeProvider.advanceTime(10.seconds)
-        // TODO: Remove the need for a sleep here.
-        Thread.sleep(500)
 
         // Then
         onView(withId(R.id.workTimeTextView))
@@ -118,12 +116,15 @@ class TestTimeProvider(
     override var currentTimeMillis: Long = startTimeMillis
         private set
 
+    override val tickSubscribers = mutableListOf<(Long) -> Unit>()
+
     init {
         currentTimeMillis = startTimeMillis
     }
 
     fun advanceTime(duration: Duration) {
         currentTimeMillis += duration.millis
+        tickSubscribers.forEach { it.invoke(currentTimeMillis) }
     }
 
 }

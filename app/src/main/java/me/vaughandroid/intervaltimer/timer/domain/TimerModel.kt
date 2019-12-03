@@ -1,6 +1,5 @@
 package me.vaughandroid.intervaltimer.timer.domain
 
-import android.util.Log
 import me.vaughandroid.intervaltimer.configuration.data.ConfigurationStore
 import me.vaughandroid.intervaltimer.time.Duration
 import me.vaughandroid.intervaltimer.time.TimeProvider
@@ -26,18 +25,12 @@ class TimerModel(
     fun start() {
         var currentTimeMillis = timeProvider.currentTimeMillis
 
-        val runnable = {
-            while(true) {
-                Thread.sleep(100)
-                val newTimeMillis = timeProvider.currentTimeMillis
-                val elapsedMillis = newTimeMillis - currentTimeMillis
-                Log.d("XXX", "$elapsedMillis")
-                currentTimeMillis = newTimeMillis
-                currentWorkTime = Duration(currentWorkTime.millis - elapsedMillis.toInt())
-                workTimeChangedListener?.invoke(currentWorkTime)
-            }
+        timeProvider.tickSubscribers += { newTimeMillis ->
+            val elapsedMillis = newTimeMillis - currentTimeMillis
+            currentTimeMillis = newTimeMillis
+            currentWorkTime = Duration(currentWorkTime.millis - elapsedMillis.toInt())
+            workTimeChangedListener?.invoke(currentWorkTime)
         }
-        Thread(runnable).start()
     }
 
 }
