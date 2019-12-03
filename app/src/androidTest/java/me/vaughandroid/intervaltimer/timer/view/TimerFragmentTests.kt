@@ -12,11 +12,10 @@ import androidx.test.rule.ActivityTestRule
 import me.vaughandroid.intervaltimer.BlankActivity
 import me.vaughandroid.intervaltimer.IntervalTimerApplication
 import me.vaughandroid.intervaltimer.R
-import me.vaughandroid.intervaltimer.configuration.data.ConfigurationStore
+import me.vaughandroid.intervaltimer.configuration.data.StubConfigurationStore
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
 import me.vaughandroid.intervaltimer.di.AppDependencies
-import me.vaughandroid.intervaltimer.time.Duration
-import me.vaughandroid.intervaltimer.time.TimeProvider
+import me.vaughandroid.intervaltimer.time.TestTimeProvider
 import me.vaughandroid.intervaltimer.time.minutes
 import me.vaughandroid.intervaltimer.time.seconds
 import org.junit.After
@@ -50,7 +49,8 @@ class TimerFragmentTests {
     private fun createFragmentWithInitialConfiguration(
         configuration: Configuration
     ): TimerFragment {
-        val stubConfigurationStore = StubConfigurationStore(configuration)
+        val stubConfigurationStore =
+            StubConfigurationStore(configuration)
         val appContainer = AppDependencies(
             stubConfigurationStore,
             testTimeProvider
@@ -109,30 +109,3 @@ class TimerFragmentTests {
 
 }
 
-class TestTimeProvider(
-    startTimeMillis: Long = 42L
-) : TimeProvider {
-
-    override var currentTimeMillis: Long = startTimeMillis
-        private set
-
-    override val tickSubscribers = mutableListOf<(Long) -> Unit>()
-
-    init {
-        currentTimeMillis = startTimeMillis
-    }
-
-    fun advanceTime(duration: Duration) {
-        currentTimeMillis += duration.millis
-        tickSubscribers.forEach { it.invoke(currentTimeMillis) }
-    }
-
-}
-
-private class StubConfigurationStore(
-    private val storedConfiguration: Configuration = Configuration()
-) : ConfigurationStore {
-    override fun getConfiguration(): Configuration = storedConfiguration
-
-    override fun putConfiguration(configuration: Configuration) {}
-}

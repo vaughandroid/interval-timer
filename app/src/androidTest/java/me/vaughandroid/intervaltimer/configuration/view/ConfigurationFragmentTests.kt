@@ -13,7 +13,7 @@ import me.vaughandroid.intervaltimer.BlankActivity
 import me.vaughandroid.intervaltimer.IntervalTimerApplication
 import me.vaughandroid.intervaltimer.R
 import me.vaughandroid.intervaltimer.Screen
-import me.vaughandroid.intervaltimer.configuration.data.ConfigurationStore
+import me.vaughandroid.intervaltimer.configuration.data.StubConfigurationStore
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
 import me.vaughandroid.intervaltimer.di.AppDependencies
 import me.vaughandroid.intervaltimer.time.minutes
@@ -226,12 +226,4 @@ class ConfigurationFragmentTests {
             )
         )
 
-}
-
-private class StubConfigurationStore(
-    private val storedConfiguration: Configuration = Configuration()
-) : ConfigurationStore {
-    override fun getConfiguration(): Configuration = storedConfiguration
-
-    override fun putConfiguration(configuration: Configuration) {}
 }
