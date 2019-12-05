@@ -34,4 +34,8 @@ class TimerViewModel(
         timerModel.start()
     }
 
+    fun pause() {
+        timerModel.pause()
+    }
+
 }

@@ -8,4 +8,5 @@
 
     <string name="timer">Timer</string>
     <string name="start">Start</string>
+    <string name="pause">Pause</string>
 </resources>

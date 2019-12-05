@@ -39,6 +39,7 @@ class TimerFragment : Fragment() {
         timerViewModel.viewDataLiveData.observe(this, observer)
 
         startButton.setOnClickListener { timerViewModel.start() }
+        pauseButton.setOnClickListener { timerViewModel.pause() }
     }
 
     private fun updateViews(viewData: TimerViewData) {
