@@ -7,7 +7,7 @@ class TestTimeProvider(
     override var currentTimeMillis: Long = startTimeMillis
         private set
 
-    override val tickSubscribers = mutableListOf<(Long) -> Unit>()
+    override val tickSubscribers = mutableSetOf<(Long) -> Unit>()
 
     init {
         currentTimeMillis = startTimeMillis

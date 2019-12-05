@@ -9,7 +9,7 @@ class SystemTimeProvider(
     override val currentTimeMillis: Long
         get() = System.currentTimeMillis()
 
-    override val tickSubscribers = mutableListOf<(Long) -> Unit>()
+    override val tickSubscribers = mutableSetOf<(Long) -> Unit>()
 
     init {
         thread(start = true, isDaemon = true) {

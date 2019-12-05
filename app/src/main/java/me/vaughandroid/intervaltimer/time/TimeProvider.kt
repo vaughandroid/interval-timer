@@ -4,6 +4,6 @@ interface TimeProvider {
 
     val currentTimeMillis: Long
 
-    val tickSubscribers: MutableList<(Long) -> Unit>
+    val tickSubscribers: MutableSet<(Long) -> Unit>
 
 }
