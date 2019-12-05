@@ -31,10 +31,11 @@ class TimerModelTests {
     }
 
     @Test
-    fun `when not started, timers are not updated as time passes`() {
+    fun `when not started, values are not updated as time passes`() {
         // Given
         val testTimeProvider = TestTimeProvider()
         val storedConfiguration = Configuration(
+            sets = 5,
             workTime = 2.minutes,
             restTime = 2.minutes
         )
@@ -44,6 +45,7 @@ class TimerModelTests {
         testTimeProvider.advanceTime(1.minutes)
 
         // Then
+        assertThat(model.currentSets).isEqualTo(5)
         assertThat(model.currentWorkTime).isEqualTo(2.minutes)
         assertThat(model.currentRestTime).isEqualTo(2.minutes)
     }
@@ -53,18 +55,43 @@ class TimerModelTests {
         // Given
         val testTimeProvider = TestTimeProvider()
         val storedConfiguration = Configuration(
+            sets = 5,
             workTime = 2.minutes,
             restTime = 2.minutes
         )
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
-        model.start()
 
         // When
+        model.start()
         testTimeProvider.advanceTime(1.minutes)
 
         // Then
+        assertThat(model.currentSets).isEqualTo(5)
         assertThat(model.currentWorkTime).isEqualTo(1.minutes)
         assertThat(model.currentRestTime).isEqualTo(2.minutes)
+    }
+
+    @Test
+    fun `when a started timer is paused, values are no longer updated as time passes`() {
+        // Given
+        val testTimeProvider = TestTimeProvider()
+        val storedConfiguration = Configuration(
+            sets = 10,
+            workTime = 1.minutes,
+            restTime = 1.minutes
+        )
+        val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
+        model.start()
+        testTimeProvider.advanceTime(10.seconds)
+
+        // When
+        model.pause()
+        testTimeProvider.advanceTime(10.seconds)
+
+        // Then
+        assertThat(model.currentSets).isEqualTo(10)
+        assertThat(model.currentWorkTime).isEqualTo(50.seconds)
+        assertThat(model.currentRestTime).isEqualTo(1.minutes)
     }
 
 }

@@ -15,6 +15,8 @@ class TimerModel(
 
     var workTimeChangedListener: ((Duration) -> Unit)? = null
 
+    private var tickSubscriber = TickSubscriber()
+
     init {
         val (sets, workTime, restTime) = configurationStore.getConfiguration()
         currentSets = sets
@@ -23,14 +25,23 @@ class TimerModel(
     }
 
     fun start() {
+        tickSubscriber.currentTimeMillis = timeProvider.currentTimeMillis
+        timeProvider.tickSubscribers += tickSubscriber
+    }
+
+    fun pause() {
+        timeProvider.tickSubscribers -= tickSubscriber
+    }
+
+    private inner class TickSubscriber: (Long) -> Unit {
         var currentTimeMillis = timeProvider.currentTimeMillis
 
-        timeProvider.tickSubscribers += { newTimeMillis ->
+        override fun invoke(newTimeMillis: Long) {
             val elapsedMillis = newTimeMillis - currentTimeMillis
             currentTimeMillis = newTimeMillis
             currentWorkTime = Duration(currentWorkTime.millis - elapsedMillis.toInt())
             workTimeChangedListener?.invoke(currentWorkTime)
         }
-    }
 
+    }
 }

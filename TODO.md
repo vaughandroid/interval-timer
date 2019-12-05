@@ -3,7 +3,6 @@
 ## Features
 
 - Timer screen
-  - Count down work time
   - Pause & resume count down
   - Count down rest time
   - Run through complete session
