@@ -94,4 +94,28 @@ class TimerModelTests {
         assertThat(model.currentRestTime).isEqualTo(1.minutes)
     }
 
+    @Test
+    fun `starting a paused timer resumes where it left off`() {
+        // Given
+        val testTimeProvider = TestTimeProvider()
+        val storedConfiguration = Configuration(
+            sets = 10,
+            workTime = 1.minutes,
+            restTime = 1.minutes
+        )
+        val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
+        model.start()
+        testTimeProvider.advanceTime(10.seconds)
+        model.pause()
+
+        // When
+        model.start()
+        testTimeProvider.advanceTime(10.seconds)
+
+        // Then
+        assertThat(model.currentSets).isEqualTo(10)
+        assertThat(model.currentWorkTime).isEqualTo(40.seconds)
+        assertThat(model.currentRestTime).isEqualTo(1.minutes)
+    }
+
 }
