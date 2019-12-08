@@ -25,7 +25,7 @@ class TimerModelTests {
         val model = TimerModel(stubStore, SystemTimeProvider())
 
         // Then
-        assertThat(model.currentSets).isEqualTo(12)
+        assertThat(model.totalSets).isEqualTo(12)
         assertThat(model.currentWorkTime).isEqualTo(37.seconds)
         assertThat(model.currentRestTime).isEqualTo(43.seconds)
     }
@@ -35,7 +35,6 @@ class TimerModelTests {
         // Given
         val testTimeProvider = TestTimeProvider()
         val storedConfiguration = Configuration(
-            sets = 5,
             workTime = 2.minutes,
             restTime = 2.minutes
         )
@@ -45,7 +44,6 @@ class TimerModelTests {
         testTimeProvider.advanceTime(1.minutes)
 
         // Then
-        assertThat(model.currentSets).isEqualTo(5)
         assertThat(model.currentWorkTime).isEqualTo(2.minutes)
         assertThat(model.currentRestTime).isEqualTo(2.minutes)
     }
@@ -55,7 +53,6 @@ class TimerModelTests {
         // Given
         val testTimeProvider = TestTimeProvider()
         val storedConfiguration = Configuration(
-            sets = 5,
             workTime = 2.minutes,
             restTime = 2.minutes
         )
@@ -66,7 +63,6 @@ class TimerModelTests {
         testTimeProvider.advanceTime(1.minutes)
 
         // Then
-        assertThat(model.currentSets).isEqualTo(5)
         assertThat(model.currentWorkTime).isEqualTo(1.minutes)
         assertThat(model.currentRestTime).isEqualTo(2.minutes)
     }
@@ -76,7 +72,6 @@ class TimerModelTests {
         // Given
         val testTimeProvider = TestTimeProvider()
         val storedConfiguration = Configuration(
-            sets = 10,
             workTime = 1.minutes,
             restTime = 1.minutes
         )
@@ -89,7 +84,6 @@ class TimerModelTests {
         testTimeProvider.advanceTime(10.seconds)
 
         // Then
-        assertThat(model.currentSets).isEqualTo(10)
         assertThat(model.currentWorkTime).isEqualTo(50.seconds)
         assertThat(model.currentRestTime).isEqualTo(1.minutes)
     }
@@ -99,7 +93,6 @@ class TimerModelTests {
         // Given
         val testTimeProvider = TestTimeProvider()
         val storedConfiguration = Configuration(
-            sets = 10,
             workTime = 1.minutes,
             restTime = 1.minutes
         )
@@ -113,7 +106,28 @@ class TimerModelTests {
         testTimeProvider.advanceTime(10.seconds)
 
         // Then
-        assertThat(model.currentSets).isEqualTo(10)
+        assertThat(model.currentWorkTime).isEqualTo(40.seconds)
+        assertThat(model.currentRestTime).isEqualTo(1.minutes)
+    }
+
+    @Test
+    fun `after work time has elapsed it starts counting down rest time`() {
+        // Given
+        val testTimeProvider = TestTimeProvider()
+        val storedConfiguration = Configuration(
+            workTime = 1.minutes,
+            restTime = 1.minutes
+        )
+        val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
+        model.start()
+        testTimeProvider.advanceTime(10.seconds)
+        model.pause()
+
+        // When
+        model.start()
+        testTimeProvider.advanceTime(10.seconds)
+
+        // Then
         assertThat(model.currentWorkTime).isEqualTo(40.seconds)
         assertThat(model.currentRestTime).isEqualTo(1.minutes)
     }

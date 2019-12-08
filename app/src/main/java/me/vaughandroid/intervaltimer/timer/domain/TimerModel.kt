@@ -9,7 +9,7 @@ class TimerModel(
     private val timeProvider: TimeProvider
 ) {
 
-    val currentSets: Int
+    val totalSets: Int
     var currentWorkTime: Duration
     val currentRestTime: Duration
 
@@ -19,7 +19,7 @@ class TimerModel(
 
     init {
         val (sets, workTime, restTime) = configurationStore.getConfiguration()
-        currentSets = sets
+        totalSets = sets
         currentWorkTime = workTime
         currentRestTime = restTime
     }

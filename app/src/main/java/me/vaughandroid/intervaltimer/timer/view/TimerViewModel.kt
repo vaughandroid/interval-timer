@@ -23,7 +23,7 @@ class TimerViewModel(
     private fun updateLiveData() {
         mutableLiveData.postValue(
             TimerViewData(
-                setsText = timerModel.currentSets.toString(),
+                setsText = timerModel.totalSets.toString(),
                 workTimeText = DurationFormatter.toDisplayString(timerModel.currentWorkTime),
                 restTimeText = DurationFormatter.toDisplayString(timerModel.currentRestTime)
             )

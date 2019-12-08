@@ -3,6 +3,7 @@
 ## Features
 
 - Timer screen
+  - Create TimerState data model.
   - Pause & resume count down
   - Count down rest time
   - Run through complete session
