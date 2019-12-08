@@ -41,7 +41,7 @@ class TimerModel_InitialisationTests {
         val model = TimerModel(stubStore, SystemTimeProvider())
 
         // Then
-        assertThat(model.currentWorkTime).isEqualTo(37.seconds)
+        assertThat(model.currentSegmentTimeRemaining).isEqualTo(37.seconds)
     }
 
 }

@@ -3,10 +3,8 @@ package me.vaughandroid.intervaltimer.timer.domain
 import com.google.common.truth.Truth.assertThat
 import me.vaughandroid.intervaltimer.configuration.data.FakeConfigurationStore
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
-import me.vaughandroid.intervaltimer.time.SystemTimeProvider
 import me.vaughandroid.intervaltimer.time.TestTimeProvider
 import me.vaughandroid.intervaltimer.time.minutes
-import me.vaughandroid.intervaltimer.time.seconds
 import org.junit.Test
 
 class TimerModel_ReadyStateTests {
@@ -22,7 +20,7 @@ class TimerModel_ReadyStateTests {
         testTimeProvider.advanceTime(1.minutes)
 
         // Then
-        assertThat(model.currentWorkTime).isEqualTo(2.minutes)
+        assertThat(model.currentSegmentTimeRemaining).isEqualTo(2.minutes)
     }
 
     @Test
@@ -38,7 +36,7 @@ class TimerModel_ReadyStateTests {
 
         // Then
         assertThat(model.currentState).isEqualTo(TimerState.WORK_RUNNING)
-        assertThat(model.currentWorkTime).isEqualTo(1.minutes)
+        assertThat(model.currentSegmentTimeRemaining).isEqualTo(1.minutes)
     }
 
 }

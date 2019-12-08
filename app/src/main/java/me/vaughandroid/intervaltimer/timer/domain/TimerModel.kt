@@ -9,23 +9,22 @@ class TimerModel(
     private val timeProvider: TimeProvider
 ) {
 
-    val totalSets: Int
+    private val configuration = configurationStore.getConfiguration()
+    val totalSets: Int = configuration.sets
 
-    var currentWorkTime: Duration
+    var currentSegmentTimeRemaining: Duration
     var currentState: TimerState = TimerState.READY
 
-    var workTimeChangedListener: ((Duration) -> Unit)? = null
+    var currentSegmentTimeChangedListener: ((Duration) -> Unit)? = null
 
     private var tickSubscriber = TickSubscriber()
 
     init {
-        val (sets, workTime, _) = configurationStore.getConfiguration()
-        totalSets = sets
-        currentWorkTime = workTime
+        currentSegmentTimeRemaining = configuration.workTime
     }
 
     fun start() {
-        tickSubscriber.currentTimeMillis = timeProvider.currentTimeMillis
+        tickSubscriber.lastTimeMillis = timeProvider.currentTimeMillis
         timeProvider.tickSubscribers += tickSubscriber
         currentState = TimerState.WORK_RUNNING
     }
@@ -35,14 +34,27 @@ class TimerModel(
         currentState = TimerState.WORK_PAUSED
     }
 
+    private fun advanceTime(elapsedMillis: Long) {
+        val newRemainingMillis = currentSegmentTimeRemaining.millis - elapsedMillis.toInt()
+
+        if (newRemainingMillis > 0) {
+            currentSegmentTimeRemaining = Duration(newRemainingMillis)
+        } else {
+            currentState = TimerState.REST_RUNNING
+            val newSegmentMillis = configuration.restTime.millis + newRemainingMillis
+            currentSegmentTimeRemaining = Duration(newSegmentMillis)
+        }
+
+        currentSegmentTimeChangedListener?.invoke(currentSegmentTimeRemaining)
+    }
+
     private inner class TickSubscriber: (Long) -> Unit {
-        var currentTimeMillis = timeProvider.currentTimeMillis
+        var lastTimeMillis = timeProvider.currentTimeMillis
 
         override fun invoke(newTimeMillis: Long) {
-            val elapsedMillis = newTimeMillis - currentTimeMillis
-            currentTimeMillis = newTimeMillis
-            currentWorkTime = Duration(currentWorkTime.millis - elapsedMillis.toInt())
-            workTimeChangedListener?.invoke(currentWorkTime)
+            val elapsedMillis = newTimeMillis - lastTimeMillis
+            lastTimeMillis = newTimeMillis
+            advanceTime(elapsedMillis)
         }
 
     }

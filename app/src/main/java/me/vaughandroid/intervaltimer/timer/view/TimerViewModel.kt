@@ -17,14 +17,14 @@ class TimerViewModel(
 
     init {
         updateLiveData()
-        timerModel.workTimeChangedListener = { updateLiveData() }
+        timerModel.currentSegmentTimeChangedListener = { updateLiveData() }
     }
 
     private fun updateLiveData() {
         mutableLiveData.postValue(
             TimerViewData(
                 setsText = timerModel.totalSets.toString(),
-                workTimeText = DurationFormatter.toDisplayString(timerModel.currentWorkTime)
+                workTimeText = DurationFormatter.toDisplayString(timerModel.currentSegmentTimeRemaining)
             )
         )
     }
