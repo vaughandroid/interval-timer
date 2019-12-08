@@ -10,7 +10,9 @@ class TimerModel(
 ) {
 
     val totalSets: Int
+
     var currentWorkTime: Duration
+    var currentState: TimerState = TimerState.READY
 
     var workTimeChangedListener: ((Duration) -> Unit)? = null
 

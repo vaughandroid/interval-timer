@@ -12,12 +12,20 @@ import org.junit.Test
 class TimerModelTests {
 
     @Test
+    fun `when initialised, it is in the ready state`() {
+        // When
+        val model = TimerModel(FakeConfigurationStore(), SystemTimeProvider())
+
+        // Then
+        assertThat(model.currentState).isEqualTo(TimerState.READY)
+    }
+
+    @Test
     fun `initial values are read from the configuration store`() {
         // Given
         val storedConfiguration = Configuration(
             sets = 12,
-            workTime = 37.seconds,
-            restTime = 43.seconds
+            workTime = 37.seconds
         )
         val stubStore = FakeConfigurationStore(storedConfiguration)
 
@@ -33,10 +41,7 @@ class TimerModelTests {
     fun `when not started, values are not updated as time passes`() {
         // Given
         val testTimeProvider = TestTimeProvider()
-        val storedConfiguration = Configuration(
-            workTime = 2.minutes,
-            restTime = 2.minutes
-        )
+        val storedConfiguration = Configuration(workTime = 2.minutes)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
 
         // When
@@ -50,10 +55,7 @@ class TimerModelTests {
     fun `when started, work time is updated as time passes`() {
         // Given
         val testTimeProvider = TestTimeProvider()
-        val storedConfiguration = Configuration(
-            workTime = 2.minutes,
-            restTime = 2.minutes
-        )
+        val storedConfiguration = Configuration(workTime = 2.minutes)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
 
         // When
@@ -68,10 +70,7 @@ class TimerModelTests {
     fun `when a started timer is paused, values are no longer updated as time passes`() {
         // Given
         val testTimeProvider = TestTimeProvider()
-        val storedConfiguration = Configuration(
-            workTime = 1.minutes,
-            restTime = 1.minutes
-        )
+        val storedConfiguration = Configuration(workTime = 1.minutes)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
         model.start()
         testTimeProvider.advanceTime(10.seconds)
@@ -88,10 +87,7 @@ class TimerModelTests {
     fun `starting a paused timer resumes where it left off`() {
         // Given
         val testTimeProvider = TestTimeProvider()
-        val storedConfiguration = Configuration(
-            workTime = 1.minutes,
-            restTime = 1.minutes
-        )
+        val storedConfiguration = Configuration(workTime = 1.minutes)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
         model.start()
         testTimeProvider.advanceTime(10.seconds)
@@ -109,10 +105,7 @@ class TimerModelTests {
     fun `after work time has elapsed it starts counting down rest time`() {
         // Given
         val testTimeProvider = TestTimeProvider()
-        val storedConfiguration = Configuration(
-            workTime = 1.minutes,
-            restTime = 1.minutes
-        )
+        val storedConfiguration = Configuration(workTime = 1.minutes)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
         model.start()
         testTimeProvider.advanceTime(10.seconds)
