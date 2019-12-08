@@ -27,7 +27,6 @@ class TimerModelTests {
         // Then
         assertThat(model.totalSets).isEqualTo(12)
         assertThat(model.currentWorkTime).isEqualTo(37.seconds)
-        assertThat(model.currentRestTime).isEqualTo(43.seconds)
     }
 
     @Test
@@ -45,7 +44,6 @@ class TimerModelTests {
 
         // Then
         assertThat(model.currentWorkTime).isEqualTo(2.minutes)
-        assertThat(model.currentRestTime).isEqualTo(2.minutes)
     }
 
     @Test
@@ -64,7 +62,6 @@ class TimerModelTests {
 
         // Then
         assertThat(model.currentWorkTime).isEqualTo(1.minutes)
-        assertThat(model.currentRestTime).isEqualTo(2.minutes)
     }
 
     @Test
@@ -85,7 +82,6 @@ class TimerModelTests {
 
         // Then
         assertThat(model.currentWorkTime).isEqualTo(50.seconds)
-        assertThat(model.currentRestTime).isEqualTo(1.minutes)
     }
 
     @Test
@@ -107,7 +103,6 @@ class TimerModelTests {
 
         // Then
         assertThat(model.currentWorkTime).isEqualTo(40.seconds)
-        assertThat(model.currentRestTime).isEqualTo(1.minutes)
     }
 
     @Test
@@ -129,7 +124,6 @@ class TimerModelTests {
 
         // Then
         assertThat(model.currentWorkTime).isEqualTo(40.seconds)
-        assertThat(model.currentRestTime).isEqualTo(1.minutes)
     }
 
 }

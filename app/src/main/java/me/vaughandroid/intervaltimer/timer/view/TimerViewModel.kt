@@ -24,8 +24,7 @@ class TimerViewModel(
         mutableLiveData.postValue(
             TimerViewData(
                 setsText = timerModel.totalSets.toString(),
-                workTimeText = DurationFormatter.toDisplayString(timerModel.currentWorkTime),
-                restTimeText = DurationFormatter.toDisplayString(timerModel.currentRestTime)
+                workTimeText = DurationFormatter.toDisplayString(timerModel.currentWorkTime)
             )
         )
     }

@@ -11,17 +11,15 @@ class TimerModel(
 
     val totalSets: Int
     var currentWorkTime: Duration
-    val currentRestTime: Duration
 
     var workTimeChangedListener: ((Duration) -> Unit)? = null
 
     private var tickSubscriber = TickSubscriber()
 
     init {
-        val (sets, workTime, restTime) = configurationStore.getConfiguration()
+        val (sets, workTime, _) = configurationStore.getConfiguration()
         totalSets = sets
         currentWorkTime = workTime
-        currentRestTime = restTime
     }
 
     fun start() {

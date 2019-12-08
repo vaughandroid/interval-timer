@@ -74,10 +74,8 @@ class TimerFragmentTests {
         // Then
         onView(withId(R.id.setsTextView))
             .check(matches(withText("13")))
-        onView(withId(R.id.workTimeTextView))
+        onView(withId(R.id.timeTextView))
             .check(matches(withText("1:18")))
-        onView(withId(R.id.restTimeTextView))
-            .check(matches(withText("32:27")))
     }
 
     @Test
@@ -95,7 +93,7 @@ class TimerFragmentTests {
         testTimeProvider.advanceTime(10.seconds)
 
         // Then
-        onView(withId(R.id.workTimeTextView))
+        onView(withId(R.id.timeTextView))
             .check(matches(withText("0:50")))
     }
 

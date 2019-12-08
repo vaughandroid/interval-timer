@@ -13,16 +13,10 @@
         tools:text="Sets" />
 
     <TextView
-        android:id="@+id/workTimeTextView"
+        android:id="@+id/timeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Work time" />
-
-    <TextView
-        android:id="@+id/restTimeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Rest time" />
 
     <Button
         android:id="@+id/startButton"

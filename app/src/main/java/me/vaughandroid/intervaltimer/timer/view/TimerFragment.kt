@@ -44,8 +44,7 @@ class TimerFragment : Fragment() {
 
     private fun updateViews(viewData: TimerViewData) {
         setsTextView.text = viewData.setsText
-        workTimeTextView.text = viewData.workTimeText
-        restTimeTextView.text = viewData.restTimeText
+        timeTextView.text = viewData.workTimeText
     }
 
 }

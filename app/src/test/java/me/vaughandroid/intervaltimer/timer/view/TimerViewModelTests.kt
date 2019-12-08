@@ -47,8 +47,7 @@ class TimerViewModelTests {
         // Then
         val expectedViewData = TimerViewData(
             setsText = "7",
-            workTimeText = "0:11",
-            restTimeText = "1:13"
+            workTimeText = "0:11"
         )
         assertThat(spyViewDataObserver.receivedViewData.first()).isEqualTo(expectedViewData)
     }
