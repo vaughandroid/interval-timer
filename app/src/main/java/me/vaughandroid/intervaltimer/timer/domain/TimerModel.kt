@@ -27,10 +27,12 @@ class TimerModel(
     fun start() {
         tickSubscriber.currentTimeMillis = timeProvider.currentTimeMillis
         timeProvider.tickSubscribers += tickSubscriber
+        currentState = TimerState.WORK_RUNNING
     }
 
     fun pause() {
         timeProvider.tickSubscribers -= tickSubscriber
+        currentState = TimerState.WORK_PAUSED
     }
 
     private inner class TickSubscriber: (Long) -> Unit {
