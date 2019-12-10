@@ -4,18 +4,18 @@ import com.google.common.truth.Truth.assertThat
 import me.vaughandroid.intervaltimer.configuration.data.FakeConfigurationStore
 import me.vaughandroid.intervaltimer.configuration.domain.Configuration
 import me.vaughandroid.intervaltimer.time.SystemTimeProvider
-import me.vaughandroid.intervaltimer.time.seconds
 import org.junit.Test
 
 class TimerModel_InitialisationTests {
 
     @Test
-    fun `when initialised, it is in the ready state`() {
+    fun `when initialised, it is paused in the ready state`() {
         // When
         val model = TimerModel(FakeConfigurationStore(), SystemTimeProvider())
 
         // Then
-        assertThat(model.currentState).isEqualTo(TimerState.READY)
+        assertThat(model.currentTimerState).isEqualTo(TimerState.READY)
+        assertThat(model.runningState).isEqualTo(RunningState.PAUSED)
     }
 
     @Test

@@ -3,6 +3,7 @@ package me.vaughandroid.intervaltimer.timer.domain
 import me.vaughandroid.intervaltimer.configuration.data.ConfigurationStore
 import me.vaughandroid.intervaltimer.time.Duration
 import me.vaughandroid.intervaltimer.time.TimeProvider
+import kotlin.properties.Delegates
 
 class TimerModel(
     configurationStore: ConfigurationStore,
@@ -15,13 +16,20 @@ class TimerModel(
 
     var currentSegmentTimeRemaining: Duration
         private set
-    var currentState: TimerState = TimerState.READY
-        private set
 
-    val currentSegmentType: SegmentType
-        get() = currentState.segmentType
-    val timerRunningState: TimerRunningState
-        get() = currentState.timerRunningState
+    var currentTimerState: TimerState = TimerState.READY
+        private set
+    var runningState: RunningState
+            by Delegates.observable(RunningState.PAUSED) { _, oldValue, newValue ->
+                if (oldValue != newValue) {
+                    tickSubscriber.lastTimeMillis = timeProvider.currentTimeMillis
+                }
+                when (newValue) {
+                    RunningState.RUNNING -> timeProvider.tickSubscribers += tickSubscriber
+                    RunningState.PAUSED -> timeProvider.tickSubscribers -= tickSubscriber
+                }
+            }
+        private set
 
     var currentSegmentTimeChangedListener: ((Duration) -> Unit)? = null
 
@@ -32,37 +40,37 @@ class TimerModel(
     }
 
     fun start() {
-        tickSubscriber.lastTimeMillis = timeProvider.currentTimeMillis
-        timeProvider.tickSubscribers += tickSubscriber
-        currentState = when (currentState.segmentType) {
-            SegmentType.READY, SegmentType.WORK -> TimerState.WORK_RUNNING
-            SegmentType.REST -> TimerState.REST_RUNNING
+        if (currentTimerState == TimerState.READY) {
+            currentTimerState = TimerState.WORK
         }
+        runningState = RunningState.RUNNING
     }
 
     fun pause() {
-        timeProvider.tickSubscribers -= tickSubscriber
-        currentState = when (currentState.segmentType) {
-            SegmentType.READY, SegmentType.WORK -> TimerState.WORK_PAUSED
-            SegmentType.REST -> TimerState.REST_PAUSED
-        }
+        runningState = RunningState.PAUSED
     }
 
-    fun enterState(newState: TimerState, durationAdjustment: Duration = Duration.ZERO) {
-        currentState = newState
+    fun enterState(
+        newTimerState: TimerState,
+        newRunningState: RunningState,
+        durationAdjustment: Duration = Duration.ZERO
+    ) {
+        enterSegment(newTimerState, durationAdjustment)
 
-        val segmentMillis = when (newState.segmentType) {
-            SegmentType.READY, SegmentType.WORK -> configuration.workTime
-            SegmentType.REST -> configuration.restTime
+        runningState = newRunningState
+    }
+
+    private fun enterSegment(
+        newTimerState: TimerState,
+        durationAdjustment: Duration = Duration.ZERO
+    ) {
+        currentTimerState = newTimerState
+
+        val segmentMillis = when (newTimerState) {
+            TimerState.READY, TimerState.WORK -> configuration.workTime
+            TimerState.REST -> configuration.restTime
         }
         currentSegmentTimeRemaining = segmentMillis + durationAdjustment
-
-        when (newState) {
-            TimerState.WORK_RUNNING, TimerState.REST_RUNNING ->
-                timeProvider.tickSubscribers += tickSubscriber
-            else ->
-                timeProvider.tickSubscribers -= tickSubscriber
-        }
     }
 
     private fun advanceTime(elapsedMillis: Long) {
@@ -71,14 +79,11 @@ class TimerModel(
         if (newRemainingMillis > 0) {
             currentSegmentTimeRemaining = Duration(newRemainingMillis)
         } else {
-            val nextState = when (currentState) {
-                TimerState.READY -> TimerState.WORK_RUNNING
-                TimerState.WORK_RUNNING -> TimerState.REST_RUNNING
-                TimerState.WORK_PAUSED -> TimerState.REST_PAUSED
-                TimerState.REST_RUNNING -> TimerState.WORK_RUNNING
-                TimerState.REST_PAUSED -> TimerState.WORK_PAUSED
+            val nextSegment = when (currentTimerState) {
+                TimerState.REST -> TimerState.WORK
+                else -> TimerState.REST
             }
-            enterState(nextState, Duration(newRemainingMillis))
+            enterSegment(nextSegment, Duration(newRemainingMillis))
         }
 
         currentSegmentTimeChangedListener?.invoke(currentSegmentTimeRemaining)

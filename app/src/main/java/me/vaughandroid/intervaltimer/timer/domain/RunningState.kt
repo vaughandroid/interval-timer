@@ -1,6 +1,6 @@
 package me.vaughandroid.intervaltimer.timer.domain
 
-enum class TimerRunningState {
+enum class RunningState {
     RUNNING,
     PAUSED
 }

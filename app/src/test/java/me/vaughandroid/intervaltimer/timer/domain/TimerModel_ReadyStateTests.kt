@@ -9,7 +9,7 @@ import org.junit.Test
 
 class TimerModel_ReadyStateTests {
 
-    @Test
+    @Test // TODO: Update
     fun `current segment time remaining uses the work time`() {
         // Given
         val testTimeProvider = TestTimeProvider()
@@ -17,19 +17,19 @@ class TimerModel_ReadyStateTests {
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
 
         // When
-        model.enterState(TimerState.READY)
+        model.enterState(TimerState.READY, RunningState.PAUSED)
 
         // Then
         assertThat(model.currentSegmentTimeRemaining).isEqualTo(2.minutes)
     }
 
-    @Test
+    @Test // TODO: Remove
     fun `time remaining is not updated as time passes`() {
         // Given
         val testTimeProvider = TestTimeProvider()
         val storedConfiguration = Configuration(workTime = 3.minutes)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
-        model.enterState(TimerState.READY)
+        model.enterState(TimerState.READY, RunningState.PAUSED)
 
         // When
         testTimeProvider.advanceTime(1.minutes)
@@ -44,14 +44,15 @@ class TimerModel_ReadyStateTests {
         val testTimeProvider = TestTimeProvider()
         val storedConfiguration = Configuration(workTime = 2.minutes)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
-        model.enterState(TimerState.READY)
+        model.enterState(TimerState.READY, RunningState.PAUSED)
 
         // When
         model.start()
         testTimeProvider.advanceTime(1.minutes)
 
         // Then
-        assertThat(model.currentState).isEqualTo(TimerState.WORK_RUNNING)
+        assertThat(model.currentTimerState).isEqualTo(TimerState.WORK)
+        assertThat(model.runningState).isEqualTo(RunningState.RUNNING)
         assertThat(model.currentSegmentTimeRemaining).isEqualTo(1.minutes)
     }
 

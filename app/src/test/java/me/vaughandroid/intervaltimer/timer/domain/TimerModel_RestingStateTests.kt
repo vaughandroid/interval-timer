@@ -17,7 +17,7 @@ class TimerModel_RestingStateTests {
         val testTimeProvider = TestTimeProvider()
         val storedConfiguration = Configuration(restTime = 4.minutes)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
-        model.enterState(TimerState.REST_RUNNING)
+        model.enterState(TimerState.REST, RunningState.RUNNING)
 
         // When
         testTimeProvider.advanceTime(1.minutes)
@@ -32,13 +32,14 @@ class TimerModel_RestingStateTests {
         val testTimeProvider = TestTimeProvider()
         val storedConfiguration = Configuration(restTime = 1.minutes)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
-        model.enterState(TimerState.REST_RUNNING)
+        model.enterState(TimerState.REST, RunningState.RUNNING)
 
         // When
         model.pause()
 
         // Then
-        assertThat(model.currentState).isEqualTo(TimerState.REST_PAUSED)
+        assertThat(model.currentTimerState).isEqualTo(TimerState.REST)
+        assertThat(model.runningState).isEqualTo(RunningState.PAUSED)
     }
 
     @Test
@@ -47,7 +48,7 @@ class TimerModel_RestingStateTests {
         val testTimeProvider = TestTimeProvider()
         val storedConfiguration = Configuration(restTime = 1.minutes)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
-        model.enterState(TimerState.REST_PAUSED)
+        model.enterState(TimerState.REST, RunningState.PAUSED)
 
         // When
         testTimeProvider.advanceTime(10.seconds)
@@ -63,14 +64,15 @@ class TimerModel_RestingStateTests {
         val storedConfiguration = Configuration(restTime = 30.seconds)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
         // Paused with 20 seconds remaining.
-        model.enterState(TimerState.REST_PAUSED, -(10.seconds))
+        model.enterState(TimerState.REST, RunningState.PAUSED, -(10.seconds))
 
         // When
         model.start()
         testTimeProvider.advanceTime(5.seconds)
 
         // Then
-        assertThat(model.currentState).isEqualTo(TimerState.REST_RUNNING)
+        assertThat(model.currentTimerState).isEqualTo(TimerState.REST)
+        assertThat(model.runningState).isEqualTo(RunningState.RUNNING)
         assertThat(model.currentSegmentTimeRemaining).isEqualTo(15.seconds)
     }
 
@@ -83,13 +85,14 @@ class TimerModel_RestingStateTests {
             workTime = 2.minutes
         )
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
-        model.enterState(TimerState.REST_RUNNING)
+        model.enterState(TimerState.REST, RunningState.RUNNING)
 
         // When
         testTimeProvider.advanceTime(1.minutes)
 
         // Then
-        assertThat(model.currentState).isEqualTo(TimerState.WORK_RUNNING)
+        assertThat(model.currentTimerState).isEqualTo(TimerState.WORK)
+        assertThat(model.runningState).isEqualTo(RunningState.RUNNING)
         assertThat(model.currentSegmentTimeRemaining).isEqualTo(2.minutes)
     }
 
@@ -102,7 +105,7 @@ class TimerModel_RestingStateTests {
             workTime = 30.seconds
         )
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
-        model.enterState(TimerState.REST_RUNNING)
+        model.enterState(TimerState.REST, RunningState.RUNNING)
 
         // When
         val spareTime = Duration(123)
