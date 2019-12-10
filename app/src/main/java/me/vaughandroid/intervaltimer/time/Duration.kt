@@ -10,6 +10,8 @@ data class Duration(
     operator fun minus(other: Duration) =
         Duration(this.millis - other.millis)
 
+    operator fun unaryMinus() = Duration(-this.millis)
+
     operator fun compareTo(other: Duration) =
         this.millis - other.millis
 

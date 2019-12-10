@@ -31,17 +31,4 @@ class TimerModel_InitialisationTests {
         assertThat(model.totalSets).isEqualTo(12)
     }
 
-    @Test
-    fun `initial work time is read from the configuration store`() {
-        // Given
-        val storedConfiguration = Configuration(workTime = 37.seconds)
-        val stubStore = FakeConfigurationStore(storedConfiguration)
-
-        // When
-        val model = TimerModel(stubStore, SystemTimeProvider())
-
-        // Then
-        assertThat(model.currentSegmentTimeRemaining).isEqualTo(37.seconds)
-    }
-
 }

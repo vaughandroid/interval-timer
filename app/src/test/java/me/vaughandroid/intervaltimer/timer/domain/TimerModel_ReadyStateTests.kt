@@ -10,17 +10,32 @@ import org.junit.Test
 class TimerModel_ReadyStateTests {
 
     @Test
-    fun `time remaining is not updated as time passes`() {
+    fun `current segment time remaining uses the work time`() {
         // Given
         val testTimeProvider = TestTimeProvider()
         val storedConfiguration = Configuration(workTime = 2.minutes)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
 
         // When
-        testTimeProvider.advanceTime(1.minutes)
+        model.enterState(TimerState.READY)
 
         // Then
         assertThat(model.currentSegmentTimeRemaining).isEqualTo(2.minutes)
+    }
+
+    @Test
+    fun `time remaining is not updated as time passes`() {
+        // Given
+        val testTimeProvider = TestTimeProvider()
+        val storedConfiguration = Configuration(workTime = 3.minutes)
+        val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
+        model.enterState(TimerState.READY)
+
+        // When
+        testTimeProvider.advanceTime(1.minutes)
+
+        // Then
+        assertThat(model.currentSegmentTimeRemaining).isEqualTo(3.minutes)
     }
 
     @Test
@@ -29,6 +44,7 @@ class TimerModel_ReadyStateTests {
         val testTimeProvider = TestTimeProvider()
         val storedConfiguration = Configuration(workTime = 2.minutes)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
+        model.enterState(TimerState.READY)
 
         // When
         model.start()
