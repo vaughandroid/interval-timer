@@ -18,6 +18,11 @@ class TimerModel(
     var currentState: TimerState = TimerState.READY
         private set
 
+    val currentSegmentType: SegmentType
+        get() = currentState.segmentType
+    val timerRunningState: TimerRunningState
+        get() = currentState.timerRunningState
+
     var currentSegmentTimeChangedListener: ((Duration) -> Unit)? = null
 
     private var tickSubscriber = TickSubscriber()
@@ -29,26 +34,26 @@ class TimerModel(
     fun start() {
         tickSubscriber.lastTimeMillis = timeProvider.currentTimeMillis
         timeProvider.tickSubscribers += tickSubscriber
-        currentState = when (currentState) {
-            TimerState.READY, TimerState.WORK_RUNNING, TimerState.WORK_PAUSED -> TimerState.WORK_RUNNING
-            TimerState.REST_RUNNING, TimerState.REST_PAUSED -> TimerState.REST_RUNNING
+        currentState = when (currentState.segmentType) {
+            SegmentType.READY, SegmentType.WORK -> TimerState.WORK_RUNNING
+            SegmentType.REST -> TimerState.REST_RUNNING
         }
     }
 
     fun pause() {
         timeProvider.tickSubscribers -= tickSubscriber
-        currentState = when (currentState) {
-            TimerState.READY, TimerState.WORK_RUNNING, TimerState.WORK_PAUSED -> TimerState.WORK_PAUSED
-            TimerState.REST_RUNNING, TimerState.REST_PAUSED -> TimerState.REST_PAUSED
+        currentState = when (currentState.segmentType) {
+            SegmentType.READY, SegmentType.WORK -> TimerState.WORK_PAUSED
+            SegmentType.REST -> TimerState.REST_PAUSED
         }
     }
 
     fun enterState(newState: TimerState, durationAdjustment: Duration = Duration.ZERO) {
         currentState = newState
 
-        val segmentMillis = when (newState) {
-            TimerState.READY, TimerState.WORK_RUNNING, TimerState.WORK_PAUSED -> configuration.workTime
-            TimerState.REST_RUNNING, TimerState.REST_PAUSED -> configuration.restTime
+        val segmentMillis = when (newState.segmentType) {
+            SegmentType.READY, SegmentType.WORK -> configuration.workTime
+            SegmentType.REST -> configuration.restTime
         }
         currentSegmentTimeRemaining = segmentMillis + durationAdjustment
 
