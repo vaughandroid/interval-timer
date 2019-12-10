@@ -29,24 +29,30 @@ class TimerModel(
     fun start() {
         tickSubscriber.lastTimeMillis = timeProvider.currentTimeMillis
         timeProvider.tickSubscribers += tickSubscriber
-        currentState = TimerState.WORK_RUNNING
+        currentState = when (currentState) {
+            TimerState.READY, TimerState.WORK_RUNNING, TimerState.WORK_PAUSED -> TimerState.WORK_RUNNING
+            TimerState.REST_RUNNING, TimerState.REST_PAUSED -> TimerState.REST_RUNNING
+        }
     }
 
     fun pause() {
         timeProvider.tickSubscribers -= tickSubscriber
-        currentState = TimerState.WORK_PAUSED
+        currentState = when (currentState) {
+            TimerState.READY, TimerState.WORK_RUNNING, TimerState.WORK_PAUSED -> TimerState.WORK_PAUSED
+            TimerState.REST_RUNNING, TimerState.REST_PAUSED -> TimerState.REST_PAUSED
+        }
     }
 
     fun enterState(newState: TimerState, durationAdjustmen: Duration = Duration.ZERO) {
         currentState = newState
 
-        val segmentMillis = when(newState) {
+        val segmentMillis = when (newState) {
             TimerState.READY, TimerState.WORK_RUNNING, TimerState.WORK_PAUSED -> configuration.workTime
             TimerState.REST_RUNNING, TimerState.REST_PAUSED -> configuration.restTime
         }
         currentSegmentTimeRemaining = segmentMillis + durationAdjustmen
 
-        when(newState) {
+        when (newState) {
             TimerState.WORK_RUNNING, TimerState.REST_RUNNING ->
                 timeProvider.tickSubscribers += tickSubscriber
             else ->
@@ -60,7 +66,14 @@ class TimerModel(
         if (newRemainingMillis > 0) {
             currentSegmentTimeRemaining = Duration(newRemainingMillis)
         } else {
-            enterState(TimerState.REST_RUNNING, Duration(newRemainingMillis))
+            val nextState = when (currentState) {
+                TimerState.READY -> TimerState.WORK_RUNNING
+                TimerState.WORK_RUNNING -> TimerState.REST_RUNNING
+                TimerState.WORK_PAUSED -> TimerState.REST_PAUSED
+                TimerState.REST_RUNNING -> TimerState.WORK_RUNNING
+                TimerState.REST_PAUSED -> TimerState.WORK_PAUSED
+            }
+            enterState(nextState, Duration(newRemainingMillis))
         }
 
         currentSegmentTimeChangedListener?.invoke(currentSegmentTimeRemaining)

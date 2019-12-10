@@ -9,45 +9,45 @@ import me.vaughandroid.intervaltimer.time.minutes
 import me.vaughandroid.intervaltimer.time.seconds
 import org.junit.Test
 
-class TimerModel_WorkingStateTests {
+class TimerModel_RestingStateTests {
 
     @Test
     fun `when running, time remaining is updated as time passes`() {
         // Given
         val testTimeProvider = TestTimeProvider()
-        val storedConfiguration = Configuration(workTime = 2.minutes)
+        val storedConfiguration = Configuration(restTime = 4.minutes)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
-        model.enterState(TimerState.WORK_RUNNING)
+        model.enterState(TimerState.REST_RUNNING)
 
         // When
         testTimeProvider.advanceTime(1.minutes)
 
         // Then
-        assertThat(model.currentSegmentTimeRemaining).isEqualTo(1.minutes)
+        assertThat(model.currentSegmentTimeRemaining).isEqualTo(3.minutes)
     }
 
     @Test
-    fun `when running, pausing enters the working paused state`() {
+    fun `when running, pausing enters the resting paused state`() {
         // Given
         val testTimeProvider = TestTimeProvider()
-        val storedConfiguration = Configuration(workTime = 1.minutes)
+        val storedConfiguration = Configuration(restTime = 1.minutes)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
-        model.enterState(TimerState.WORK_RUNNING)
+        model.enterState(TimerState.REST_RUNNING)
 
         // When
         model.pause()
 
         // Then
-        assertThat(model.currentState).isEqualTo(TimerState.WORK_PAUSED)
+        assertThat(model.currentState).isEqualTo(TimerState.REST_PAUSED)
     }
 
     @Test
     fun `when paused, time remaining is not updated as time passes`() {
         // Given
         val testTimeProvider = TestTimeProvider()
-        val storedConfiguration = Configuration(workTime = 1.minutes)
+        val storedConfiguration = Configuration(restTime = 1.minutes)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
-        model.enterState(TimerState.WORK_PAUSED)
+        model.enterState(TimerState.REST_PAUSED)
 
         // When
         testTimeProvider.advanceTime(10.seconds)
@@ -60,37 +60,37 @@ class TimerModel_WorkingStateTests {
     fun `when paused, starting starts the timer running and the working time resumes where it left off`() {
         // Given
         val testTimeProvider = TestTimeProvider()
-        val storedConfiguration = Configuration(workTime = 1.minutes)
+        val storedConfiguration = Configuration(restTime = 30.seconds)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
-        // Paused with 50 seconds remaining.
-        model.enterState(TimerState.WORK_PAUSED, -(10.seconds))
+        // Paused with 20 seconds remaining.
+        model.enterState(TimerState.REST_PAUSED, -(10.seconds))
 
         // When
         model.start()
-        testTimeProvider.advanceTime(10.seconds)
-
-        // Then
-        assertThat(model.currentState).isEqualTo(TimerState.WORK_RUNNING)
-        assertThat(model.currentSegmentTimeRemaining).isEqualTo(40.seconds)
-    }
-
-    @Test
-    fun `when running, as soon as work time elapses it enters the resting state with the full amount of rest time`() {
-        // Given
-        val testTimeProvider = TestTimeProvider()
-        val storedConfiguration = Configuration(
-            workTime = 2.minutes,
-            restTime = 1.minutes
-        )
-        val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
-        model.enterState(TimerState.WORK_RUNNING)
-
-        // When
-        testTimeProvider.advanceTime(2.minutes)
+        testTimeProvider.advanceTime(5.seconds)
 
         // Then
         assertThat(model.currentState).isEqualTo(TimerState.REST_RUNNING)
-        assertThat(model.currentSegmentTimeRemaining).isEqualTo(1.minutes)
+        assertThat(model.currentSegmentTimeRemaining).isEqualTo(15.seconds)
+    }
+
+    @Test
+    fun `when running, as soon as rest time elapses it enters the work running state with the full amount of work time`() {
+        // Given
+        val testTimeProvider = TestTimeProvider()
+        val storedConfiguration = Configuration(
+            restTime = 1.minutes,
+            workTime = 2.minutes
+        )
+        val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
+        model.enterState(TimerState.REST_RUNNING)
+
+        // When
+        testTimeProvider.advanceTime(1.minutes)
+
+        // Then
+        assertThat(model.currentState).isEqualTo(TimerState.WORK_RUNNING)
+        assertThat(model.currentSegmentTimeRemaining).isEqualTo(2.minutes)
     }
 
     @Test
@@ -98,18 +98,18 @@ class TimerModel_WorkingStateTests {
         // Given
         val testTimeProvider = TestTimeProvider()
         val storedConfiguration = Configuration(
-            workTime = 10.seconds,
-            restTime = 10.seconds
+            restTime = 30.seconds,
+            workTime = 30.seconds
         )
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
-        model.enterState(TimerState.WORK_RUNNING)
+        model.enterState(TimerState.REST_RUNNING)
 
         // When
         val spareTime = Duration(123)
-        testTimeProvider.advanceTime(10.seconds + spareTime)
+        testTimeProvider.advanceTime(30.seconds + spareTime)
 
         // Then
-        assertThat(model.currentSegmentTimeRemaining).isEqualTo(10.seconds - spareTime)
+        assertThat(model.currentSegmentTimeRemaining).isEqualTo(30.seconds - spareTime)
     }
 
 }
