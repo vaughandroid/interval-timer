@@ -10,10 +10,13 @@ class TimerModel(
 ) {
 
     private val configuration = configurationStore.getConfiguration()
+
     val totalSets: Int = configuration.sets
 
     var currentSegmentTimeRemaining: Duration
+        private set
     var currentState: TimerState = TimerState.READY
+        private set
 
     var currentSegmentTimeChangedListener: ((Duration) -> Unit)? = null
 
@@ -48,7 +51,7 @@ class TimerModel(
         currentSegmentTimeChangedListener?.invoke(currentSegmentTimeRemaining)
     }
 
-    private inner class TickSubscriber: (Long) -> Unit {
+    private inner class TickSubscriber : (Long) -> Unit {
         var lastTimeMillis = timeProvider.currentTimeMillis
 
         override fun invoke(newTimeMillis: Long) {
