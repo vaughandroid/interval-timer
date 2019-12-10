@@ -40,9 +40,6 @@ class TimerModel(
     }
 
     fun start() {
-        if (currentTimerState == TimerState.READY) {
-            currentTimerState = TimerState.WORK
-        }
         runningState = RunningState.RUNNING
     }
 
@@ -67,7 +64,8 @@ class TimerModel(
         currentTimerState = newTimerState
 
         val segmentMillis = when (newTimerState) {
-            TimerState.READY, TimerState.WORK -> configuration.workTime
+            TimerState.READY -> Duration.ZERO
+            TimerState.WORK -> configuration.workTime
             TimerState.REST -> configuration.restTime
         }
         currentSegmentTimeRemaining = segmentMillis + durationAdjustment
@@ -80,7 +78,7 @@ class TimerModel(
             currentSegmentTimeRemaining = Duration(newRemainingMillis)
         } else {
             val nextSegment = when (currentTimerState) {
-                TimerState.REST -> TimerState.WORK
+                TimerState.READY, TimerState.REST -> TimerState.WORK
                 else -> TimerState.REST
             }
             enterSegment(nextSegment, Duration(newRemainingMillis))
