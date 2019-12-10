@@ -37,14 +37,14 @@ class TimerModel(
         currentState = TimerState.WORK_PAUSED
     }
 
-    fun enterState(newState: TimerState, durationOffsetMillis: Int = 0) {
+    fun enterState(newState: TimerState, durationAdjustmen: Duration = Duration.ZERO) {
         currentState = newState
 
         val segmentMillis = when(newState) {
-            TimerState.READY, TimerState.WORK_RUNNING, TimerState.WORK_PAUSED -> configuration.workTime.millis
-            TimerState.REST_RUNNING, TimerState.REST_PAUSED -> configuration.restTime.millis
+            TimerState.READY, TimerState.WORK_RUNNING, TimerState.WORK_PAUSED -> configuration.workTime
+            TimerState.REST_RUNNING, TimerState.REST_PAUSED -> configuration.restTime
         }
-        currentSegmentTimeRemaining = Duration(segmentMillis + durationOffsetMillis)
+        currentSegmentTimeRemaining = segmentMillis + durationAdjustmen
 
         when(newState) {
             TimerState.WORK_RUNNING, TimerState.REST_RUNNING ->
@@ -60,7 +60,7 @@ class TimerModel(
         if (newRemainingMillis > 0) {
             currentSegmentTimeRemaining = Duration(newRemainingMillis)
         } else {
-            enterState(TimerState.REST_RUNNING, newRemainingMillis)
+            enterState(TimerState.REST_RUNNING, Duration(newRemainingMillis))
         }
 
         currentSegmentTimeChangedListener?.invoke(currentSegmentTimeRemaining)

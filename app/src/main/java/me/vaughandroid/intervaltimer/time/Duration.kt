@@ -4,6 +4,12 @@ data class Duration(
     val millis: Int
 ) {
 
+    companion object {
+
+        val ZERO = Duration(0)
+
+    }
+
     operator fun plus(other: Duration) =
         Duration(this.millis + other.millis)
 

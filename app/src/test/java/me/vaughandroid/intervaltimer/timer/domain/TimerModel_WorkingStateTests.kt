@@ -63,7 +63,7 @@ class TimerModel_WorkingStateTests {
         val storedConfiguration = Configuration(workTime = 1.minutes)
         val model = TimerModel(FakeConfigurationStore(storedConfiguration), testTimeProvider)
         // Paused with 50 seconds remaining.
-        model.enterState(TimerState.WORK_PAUSED, -10.seconds.millis)
+        model.enterState(TimerState.WORK_PAUSED, -(10.seconds))
 
         // When
         model.start()
