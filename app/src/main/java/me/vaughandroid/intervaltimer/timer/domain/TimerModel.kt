@@ -19,6 +19,7 @@ class TimerModel(
 
     var currentTimerState: TimerState = TimerState.READY
         private set
+
     var runningState: RunningState
             by Delegates.observable(RunningState.PAUSED) { _, oldValue, newValue ->
                 if (oldValue != newValue) {
@@ -47,6 +48,7 @@ class TimerModel(
         runningState = RunningState.PAUSED
     }
 
+    // TODO: This is only used for setting test starting conditions. Replace with a constructor param.
     fun enterState(
         newTimerState: TimerState,
         newRunningState: RunningState,
