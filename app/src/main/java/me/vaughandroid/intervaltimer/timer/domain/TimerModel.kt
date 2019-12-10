@@ -43,14 +43,14 @@ class TimerModel(
         }
     }
 
-    fun enterState(newState: TimerState, durationAdjustmen: Duration = Duration.ZERO) {
+    fun enterState(newState: TimerState, durationAdjustment: Duration = Duration.ZERO) {
         currentState = newState
 
         val segmentMillis = when (newState) {
             TimerState.READY, TimerState.WORK_RUNNING, TimerState.WORK_PAUSED -> configuration.workTime
             TimerState.REST_RUNNING, TimerState.REST_PAUSED -> configuration.restTime
         }
-        currentSegmentTimeRemaining = segmentMillis + durationAdjustmen
+        currentSegmentTimeRemaining = segmentMillis + durationAdjustment
 
         when (newState) {
             TimerState.WORK_RUNNING, TimerState.REST_RUNNING ->
